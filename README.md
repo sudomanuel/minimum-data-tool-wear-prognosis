@@ -50,7 +50,7 @@ results in this repository.
 | # | Section |
 |--:|---|
 | 1 | [The problem](#1--the-problem) |
-| 2 | [The data](#2--the-data) |
+| 2 | [The data, the machine and the experiments](#2--the-data) |
 | 3 | [The pipeline](#3--the-pipeline) |
 | 4 | [Headline results](#4--headline-results) |
 | 5 | [The two branches — settled head-to-head](#5--the-two-branches--settled-head-to-head) |
@@ -100,6 +100,77 @@ one:
 The dispersion of the wear level at which chipping occurs (127–291 µm) is the physical signature of a
 **stochastic failure mechanism**: a fixed wear threshold is the wrong end-of-life definition, which
 motivates the hazard treatment of Section 7.
+
+### Machine, instrumentation and workpiece
+
+The campaign was run on a **Hanwha XD26II-V Swiss-type turning centre** (sliding headstock with guide
+bushing) at the KSF Institute for Advanced Manufacturing. The workpiece is **stainless steel 1.4571**
+machined with a **VSP K2P coated-carbide insert**. Flank wear `VB` is measured off-machine after each
+cycle on a **Keyence VHX-7000** optical microscope. Two sensor families are acquired per machining
+cycle: **axial and radial piezoelectric accelerometers** (vibration) and an **acoustic-emission (AE)**
+channel.
+
+<div align="center">
+<img src="outputs/figures/machine_setup.png" width="88%"
+     alt="Hanwha Swiss-type turning centre, sensor placement, Keyence wear-measurement station and cutting tool">
+</div>
+
+*(a) the Hanwha XD26II-V; (b) the in-process sensor placement — vibration sensor, AE sensor and the
+workpiece at the guide bushing; (c) the Keyence VHX-7000 wear-measurement station; (d) the plunging +
+OD-turning cutting tool.*
+
+### The machining cycle (intermittent cutting)
+
+Each experiment is an **indivisible cycle of six machining contacts**, executed in one of two
+strategies:
+
+- **Strategy 1** — five consecutive radial plunge operations at 3 / 2 mm spacings followed by
+  parting-off (≈ 60 mm of machined length per cycle).
+- **Strategy 2** — a combined cycle of radial plunging **plus axial (OD) turning** over the guide-bush
+  length, then parting-off, which reproduces real outer-diameter-turning wear.
+
+The six contacts produce the **six energy bursts seen per cycle** in the vibration record — the same
+per-contact segmentation the feature pipeline consumes. Wear `VB` is read once, ex-situ, at the end of
+each cycle, so only a handful of labels exist per tool.
+
+### Which sensor carries the wear signal
+
+Recording both channels lets the wear signal be located empirically rather than assumed. **Axial
+vibration shows the strongest correlation with flank wear** (|r| ≈ 0.76); the **acoustic-emission
+features were excluded** (|r| ≈ 0.27). The analysis therefore builds on the axial/radial accelerometer
+channels.
+
+<div align="center">
+<img src="outputs/figures/sensor_signals.png" width="78%"
+     alt="Vibration and acoustic-emission acquisition chains and their per-cycle burst signals">
+</div>
+
+*(a) the sensors on the machine → (b, c) the vibration acquisition module and its signal; (d, e) the
+acoustic-emission acquisition hardware and its signal. Both show the burst-per-contact structure of a
+machining cycle.*
+
+### Why conventional wear detection is hard here (the process physics)
+
+Two machine-level effects confound naïve feature–wear correlations, and are the reason the framework
+leans on the physics of the wear curve rather than on the raw signal magnitude:
+
+1. **Variable rotational speed.** A constant cutting speed means the spindle speed varies with
+   diameter; the feed tracks the spindle speed, so each pass carries different frequency content.
+2. **Bar-feeder length.** A longer bar in the feeder draws a higher spindle-current load; that load
+   falls as the bar shortens, directly **conflicting with the rising cutting force from wear**.
+   (Compensating this effect by integrating the live workpiece length via OPC-UA is a documented
+   process-side refinement.)
+
+Day-to-day thermal drift also enters the signals unrelated to wear, so the feature analysis focuses on
+descriptors that stay **stable across the whole tool life**. These physical realities — not a modelling
+choice — are why the sensor branch, given every fair chance, does not transfer across tools
+(Section 5).
+
+> **Experimental scope.** The full campaign is the 3 × 3 × 2 factorial above (18 conditions, one tool
+> each); one tool was additionally taken **new → end of life over a long-duration run** (v_c 55 m/min,
+> f 0.08 mm/rev, coolant), which supplies the deepest single wear trajectory in the set. Earlier
+> progress snapshots described only a subset of these runs; the machine, instrumentation and procedure
+> documented here are those of the completed campaign.
 
 ---
 
@@ -174,8 +245,8 @@ files).
 | Life-normalized accuracy | 5.6 µm = **2.8 %** of the 200 µm criterion | — |
 
 <div align="center">
-<img src="outputs/figures/mcurve.png" width="47%" alt="Minimum-data m-curve">
-<img src="outputs/figures/all_models_comparison.png" width="47%" alt="All models comparison, LOTO MAE">
+<img src="outputs/figures/paper_mcurve.png" width="47%" alt="Minimum-data m-curve">
+<img src="outputs/figures/paper_models.png" width="47%" alt="All models comparison, LOTO MAE">
 </div>
 
 **Honesty notes carried in the manuscript itself:** the per-tool R² is ill-conditioned on short
@@ -205,7 +276,7 @@ a deliberately handicapped duel:
   p < 10⁻⁴)**. The live signal carries the cutting condition, not the tool-specific wear state.
 
 <div align="center">
-<img src="outputs/figures/f2_fair_baseline.png" width="60%"
+<img src="outputs/figures/paper_fair_baseline.png" width="60%"
      alt="Fair sensor baseline: all variants remain at or below R2 = 0">
 </div>
 
@@ -232,7 +303,7 @@ the interval sits at its data-imposed floor**; the exposed width–coverage–bu
 operational knob.
 
 <div align="center">
-<img src="outputs/figures/conformal_demo.png" width="60%"
+<img src="outputs/figures/paper_conformal.png" width="60%"
      alt="Few-shot forecast with guaranteed 90 percent conformal band">
 </div>
 
