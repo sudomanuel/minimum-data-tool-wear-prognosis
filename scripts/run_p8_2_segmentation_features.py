@@ -10,7 +10,7 @@ Reads raw signals from the main repo (--repo-root); writes outputs into the work
 No signals moved; no synthetic data; no model training. exp77 kept at 4 contacts (no
 imputation); 71-72 are target-only rows in the raw_signal_manifest (no signals).
 
-Uso:  python run.py p8-2-features  [--repo-root D:/KSF/PHM/phm_tool_wear]
+Uso:  python run.py p8-2-features  [--repo-root <repo-root>]
 """
 import argparse
 import re
@@ -216,7 +216,7 @@ def make_overlays(raw_df, seg_dir):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--repo-root", type=Path, default=Path("D:/KSF/PHM/phm_tool_wear"))
+    ap.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1])
     args = ap.parse_args()
     vb = load_official_vb(data_root=args.repo_root / "data" / "targets")
     vb_map = dict(zip(vb.experiment_id.astype(int), vb.VB_um.astype(float)))

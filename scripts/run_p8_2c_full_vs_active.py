@@ -11,7 +11,7 @@ Two segmentation sources (both branch_candidate until P8.3 decides on performanc
 Reads raw signals from --repo-root; reuses the active-window boundaries already in
 data/manifest/segments_manifest.csv. Writes branch tables + a comparison CSV.
 
-Uso:  python run.py p8-2c-compare  [--repo-root D:/KSF/PHM/phm_tool_wear]
+Uso:  python run.py p8-2c-compare  [--repo-root <repo-root>]
 """
 import argparse
 import sys
@@ -91,7 +91,7 @@ def aggregate(feat_df, vb_map, source):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--repo-root", type=Path, default=Path("D:/KSF/PHM/phm_tool_wear"))
+    ap.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1])
     args = ap.parse_args()
     AUDIT.mkdir(parents=True, exist_ok=True)
     vb = load_official_vb(data_root=args.repo_root / "data" / "targets")

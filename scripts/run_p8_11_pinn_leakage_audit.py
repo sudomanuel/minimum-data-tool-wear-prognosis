@@ -19,7 +19,7 @@ Static guarantees already verified by code review:
   - PINNRegressor scales median/mean/std from the TRAIN arrays only; the held-out is
     transformed with train statistics -> no scaling leakage.
 
-Uso:  python run.py p8-11-pinn-leakage  [--repo-root D:/KSF/PHM/phm_tool_wear] [--epochs 1500] [--perm 5]
+Uso:  python run.py p8-11-pinn-leakage  [--repo-root <repo-root>] [--epochs 1500] [--perm 5]
 """
 import argparse
 import sys
@@ -91,7 +91,7 @@ def dummy_loeo(df):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--repo-root", type=Path, default=Path("D:/KSF/PHM/phm_tool_wear"))
+    ap.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1])
     ap.add_argument("--epochs", type=int, default=1500)
     ap.add_argument("--perm", type=int, default=5)
     args = ap.parse_args()

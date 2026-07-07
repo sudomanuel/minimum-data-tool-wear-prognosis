@@ -14,7 +14,7 @@ Outputs (results/):
   p8_1_fold_predictions.csv
 Figures: outputs/figures/p8_1/
 
-Uso:  python run.py rebaseline-p8-1   [--repo-root D:/KSF/PHM/phm_tool_wear] [--pinn-epochs 2000]
+Uso:  python run.py rebaseline-p8-1   [--repo-root <repo-root>] [--pinn-epochs 2000]
 """
 import argparse
 import sys
@@ -159,7 +159,7 @@ def pinn_loeo(df, epochs):
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--repo-root", type=Path, default=Path("D:/KSF/PHM/phm_tool_wear"))
+    ap.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1])
     ap.add_argument("--pinn-epochs", type=int, default=2000)
     ap.add_argument("--skip-pinn", action="store_true")
     args = ap.parse_args()

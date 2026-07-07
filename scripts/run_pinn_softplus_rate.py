@@ -17,7 +17,7 @@ artificial flattening, and better behaviour around exp77.
 Outputs: results/pinn_softplus_rate_ablation.csv; reports/pinn_softplus_rate_report.md;
 outputs/figures/pinn_softplus_vb_curves.png; outputs/figures/pinn_softplus_rate_curves.png.
 
-Uso:  python run.py pinn-softplus   [--repo-root D:/KSF/PHM/phm_tool_wear] [--epochs 1200]
+Uso:  python run.py pinn-softplus   [--repo-root <repo-root>] [--epochs 1200]
 """
 import argparse
 import sys
@@ -113,7 +113,7 @@ def insample_rate_coherence(df, cfg, epochs, seed=42):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--repo-root", type=Path, default=Path("D:/KSF/PHM/phm_tool_wear"))
+    ap.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1])
     ap.add_argument("--epochs", type=int, default=1500)
     args = ap.parse_args()
     RESULTS.mkdir(parents=True, exist_ok=True)

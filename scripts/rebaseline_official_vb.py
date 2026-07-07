@@ -13,7 +13,7 @@ RUL: threshold crossing on the Poly2(t) full-data fit for several thresholds.
 
 Uso:
     python run.py rebaseline-vb
-    python run.py rebaseline-vb --repo-root D:/KSF/PHM/phm_tool_wear
+    python run.py rebaseline-vb --repo-root <repo-root>
 """
 import argparse
 import json
@@ -79,7 +79,7 @@ def _threshold_crossing(coef, thr, t_lo, t_max, step):
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--repo-root", type=Path, default=Path("D:/KSF/PHM/phm_tool_wear"))
+    ap.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1])
     args = ap.parse_args()
     RESULTS.mkdir(parents=True, exist_ok=True)
     targets_yaml = WT_ROOT / "config" / "targets.yaml"

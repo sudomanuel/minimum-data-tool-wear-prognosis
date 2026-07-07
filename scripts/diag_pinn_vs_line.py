@@ -16,7 +16,7 @@ LOEO on the official VB:
 Writes results/diag_pinn_vs_line.csv, outputs/figures/diag_pinn_vs_line.png,
 reports/diag_pinn_vs_line.md. Does NOT touch any official results/metrics or the `pipeline` task.
 
-Uso:  python run.py diag-pinn-vs-line   [--repo-root D:/KSF/PHM/phm_tool_wear] [--epochs 1500]
+Uso:  python run.py diag-pinn-vs-line   [--repo-root <repo-root>] [--epochs 1500]
 """
 import argparse
 import sys
@@ -77,7 +77,7 @@ def pinn_loeo(df, x_cols, epochs):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--repo-root", type=Path, default=Path("D:/KSF/PHM/phm_tool_wear"))
+    ap.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1])
     ap.add_argument("--epochs", type=int, default=1500)
     args = ap.parse_args()
     RESULTS.mkdir(parents=True, exist_ok=True); FIGS.mkdir(parents=True, exist_ok=True)

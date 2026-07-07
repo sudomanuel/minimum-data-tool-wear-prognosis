@@ -14,7 +14,7 @@ Outputs: results/hi_rul_threshold_summary.csv, results/hi_rul_curves.csv,
 reports/hi_rul_threshold_report.md, outputs/figures/hi_curves_by_model.png,
 outputs/figures/rul_threshold_crossing.png.
 
-Uso:  python run.py hi-rul-sweep   [--repo-root D:/KSF/PHM/phm_tool_wear]
+Uso:  python run.py hi-rul-sweep   [--repo-root <repo-root>]
 """
 import argparse
 import sys
@@ -96,7 +96,7 @@ def build_curves(df, grid):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--repo-root", type=Path, default=Path("D:/KSF/PHM/phm_tool_wear"))
+    ap.add_argument("--repo-root", type=Path, default=Path(__file__).resolve().parents[1])
     args = ap.parse_args()
     RESULTS.mkdir(parents=True, exist_ok=True)
     FIGS.mkdir(parents=True, exist_ok=True)

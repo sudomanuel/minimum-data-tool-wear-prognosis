@@ -7,3 +7,6 @@ data/raw/
 data/interim/
 data/processed/
 outputs/logs/
+
+# Local-only outputs of legacy report-writing scripts (content not published)
+reports/
