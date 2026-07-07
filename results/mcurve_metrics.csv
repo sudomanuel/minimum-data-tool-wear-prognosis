@@ -1,0 +1,4 @@
+model,m,MAE_um,RMSE_um,MAPE_pct,MaxAE_um,R2,n_tools
+Average-wear-curve (baseline),m=3,18.7,20.5,10.7,26.6,-1.31,18
+Our model: physics + few-shot self-adapt (CONSERVATIVE),m=3,11.6,12.5,6.6,17.5,0.52,18
+Our model: physics + few-shot self-adapt (PRECISE),m=4,9.7,9.9,5.3,11.3,0.67,18

@@ -1,0 +1,4 @@
+tool_id,within_tool_order,vb_um,photo_ref,measured,notes
+T0X,1,103.0,photos/exp01.png,true,example - replace with real microscope VB
+T0X,2,108.0,photos/exp02.png,true,
+T0X,3,148.0,photos/exp03.png,true,

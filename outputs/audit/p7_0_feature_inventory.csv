@@ -1,0 +1,4 @@
+path,level,n_rows,n_cols,n_numeric,nan_cells_pct,n_constant_numeric_cols,metadata_cols
+data/interim/contact_features.csv,contact,120,19,18,2.807,0,experiment_id|direction|contact_id
+data/processed/experiment_features.csv,experiment,10,208,207,3.077,2,experiment_id|tool_id|experiment_order|F|end_of_life|VB_um
+data/processed/modeling_dataset.csv,experiment,10,205,205,3.122,2,experiment_id|F|VB_um

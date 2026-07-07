@@ -1,0 +1,30 @@
+metric,value,model_or_branch,status,source_file,commit,comment
+LOEO MAE (um),3.1,Linear(t) official,current_official,results/p8_0_rebaseline_timeaware.csv,a7a2d49,time-only control on official VB (recorded-10)
+LOEO MAE (um),3.83,Poly2(t) official,current_official,results/p8_0_rebaseline_timeaware.csv,a7a2d49,time-only control on official VB (recorded-10)
+LOEO MAE (um),6.72,PINN_no_physics (P8.1),current_official,results/p8_1_official_vb_pinn_ablation_results.csv,a7a2d49,R2=0.94; mono_viol=1
+LOEO MAE (um),6.65,PINN_mono (P8.1),current_official,results/p8_1_official_vb_pinn_ablation_results.csv,a7a2d49,R2=0.94; mono_viol=1
+LOEO MAE (um),42.13,PINN_rate (P8.1),current_official,results/p8_1_official_vb_pinn_ablation_results.csv,a7a2d49,R2=-0.45; mono_viol=5
+LOEO MAE (um),64.06,PINN_full (P8.1),current_official,results/p8_1_official_vb_pinn_ablation_results.csv,a7a2d49,R2=-2.2; mono_viol=5
+LOEO MAE (um),29.86,FUSION_AR/RandomForest,current_official,results/sensor_branch_comparison.csv,a7a2d49,R2=0.14; exp77_resid=-71.36
+LOEO MAE (um),29.08,FUSION_AR_reliability_aware/ElasticNet,current_official,results/sensor_branch_comparison.csv,a7a2d49,R2=0.09; exp77_resid=-70.76
+LOEO MAE (um),24.16,SOLO_A/RandomForest,current_official,results/sensor_branch_comparison.csv,a7a2d49,R2=0.41; exp77_resid=-31.33
+LOEO MAE (um),25.88,SOLO_R/Ridge,current_official,results/sensor_branch_comparison.csv,a7a2d49,R2=0.11; exp77_resid=-88.64
+LOEO MAE (um),17.62,P0_data_only (P8.4),current_official,results/pinn_softplus_rate_ablation.csv,a7a2d49,in-sample rate<0=0.0; exp77=-38.13; flatten=-0.792
+LOEO MAE (um),17.55,P1_mono (P8.4),current_official,results/pinn_softplus_rate_ablation.csv,a7a2d49,in-sample rate<0=0.0; exp77=-38.18; flatten=-0.778
+LOEO MAE (um),27.88,P2_old_rate (P8.4),current_official,results/pinn_softplus_rate_ablation.csv,a7a2d49,in-sample rate<0=0.0; exp77=-97.77; flatten=-5.789
+LOEO MAE (um),28.32,P3_softplus_rate (P8.4),current_official,results/pinn_softplus_rate_ablation.csv,a7a2d49,in-sample rate<0=0.0; exp77=-87.57; flatten=-4.15
+LOEO MAE (um),28.33,P4_mono_softplus (P8.4),current_official,results/pinn_softplus_rate_ablation.csv,a7a2d49,in-sample rate<0=0.0; exp77=-87.78; flatten=-4.167
+t_failure @300um,21.0,Linear(t),current_official_extrapolated,results/hi_rul_threshold_summary.csv,a7a2d49,crossing_within_horizon=True; rul_extrapolated=True
+t_failure @300um,no_crossing_within_horizon,Poly2(t),current_official_extrapolated,results/hi_rul_threshold_summary.csv,a7a2d49,crossing_within_horizon=False; rul_extrapolated=True
+t_failure @300um,no_crossing_within_horizon,Classical_best(EN),current_official_extrapolated,results/hi_rul_threshold_summary.csv,a7a2d49,crossing_within_horizon=False; rul_extrapolated=True
+t_failure @300um,no_crossing_within_horizon,PINN_mono,current_official_extrapolated,results/hi_rul_threshold_summary.csv,a7a2d49,crossing_within_horizon=False; rul_extrapolated=True
+t_failure @300um,no_crossing_within_horizon,PINN_softplus_rate,current_official_extrapolated,results/hi_rul_threshold_summary.csv,a7a2d49,crossing_within_horizon=False; rul_extrapolated=True
+t_failure @300um,no_crossing_within_horizon,PINN_mono+softplus,current_official_extrapolated,results/hi_rul_threshold_summary.csv,a7a2d49,crossing_within_horizon=False; rul_extrapolated=True
+VB_max_observed (um),212,T01 official,current_official,data/targets/microscope_vb.csv,a7a2d49,official VB max < all thresholds
+VB_0 (um),103,T01 official,current_official,config/rul_thresholds.yaml,a7a2d49,initial wear
+sampling_rate (kHz),50,T01,current_official,data/manifest/t01_canonical_manifest.csv,a7a2d49,confirmed
+recorded experiments,10,T01,current_official,data/manifest/t01_canonical_manifest.csv,a7a2d49,exp71/72 target-only; exp77 4 contacts
+LOEO MAE (um),19.07,ElasticNet SOLO_A (LEGACY),legacy_historical,README.md / method deck,a7a2d49,legacy target 85-280; superseded
+LOEO MAE (um),4.96,Poly2(t) (LEGACY),legacy_historical,README.md,a7a2d49,legacy target 85-280
+LOEO MAE (um),18.57,PINN_mono (LEGACY),legacy_historical,README.md,a7a2d49,legacy target 85-280
+VB_max (um),280,T01 (LEGACY),legacy_historical,vb_targets.csv,a7a2d49,legacy subset; superseded by 212

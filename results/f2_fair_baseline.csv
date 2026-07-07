@@ -1,0 +1,6 @@
+model,R2,MAE
+raw+Ridge (straw man),-1.76,56.6
+raw+RF (straw man),-0.3,40.6
+physics(abs)+PLS,-0.14,37.0
+physics(rel-breakin)+PLS [FAIR],-0.81,45.0
+fair + condition,-0.94,45.0

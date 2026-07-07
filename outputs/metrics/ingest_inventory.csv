@@ -1,0 +1,11 @@
+tool_id,experiment_id,channels,n_channels,n_parts_max,parts_per_channel
+T01,66,axial;rotacional,2,6,axial:6;rotacional:6
+T01,67,axial;rotacional,2,6,axial:6;rotacional:6
+T01,68,axial;rotacional,2,6,axial:6;rotacional:6
+T01,69,axial;rotacional,2,6,axial:6;rotacional:6
+T01,70,axial;rotacional,2,6,axial:6;rotacional:6
+T01,73,axial;rotacional,2,6,axial:6;rotacional:6
+T01,74,axial;rotacional,2,6,axial:6;rotacional:6
+T01,75,axial;rotacional,2,6,axial:6;rotacional:6
+T01,76,axial;rotacional,2,6,axial:6;rotacional:6
+T01,77,axial;rotacional,2,4,axial:4;rotacional:4

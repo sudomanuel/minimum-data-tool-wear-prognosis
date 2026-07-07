@@ -1,0 +1,19 @@
+tool,last_obs,t_fail_pred,RUL_pred,RUL_window,t_fail_obs,validated,abs_err_cuts
+T1,3,3.0,0.0,"(0, 0)",1.0,False,
+T2,3,,,"(4, None)",,False,
+T3,3,22.0,19.0,"(4, None)",,False,
+T4,3,,,"(4, None)",,False,
+T5,3,,,"(4, None)",,False,
+T6,3,,,"(4, None)",,False,
+T7,3,3.0,0.0,"(0, 0)",1.0,False,
+T8,3,25.0,22.0,"(4, None)",,False,
+T9,3,14.0,11.0,"(3, None)",,False,
+T10,3,48.0,45.0,"(4, None)",,False,
+T11,3,26.0,23.0,"(4, None)",,False,
+T12,3,24.0,21.0,"(4, None)",,False,
+T13,3,3.0,0.0,"(0, 0)",1.0,False,
+T14,3,,,"(4, None)",11.0,True,
+T15,3,13.0,10.0,"(2, None)",5.0,True,8.0
+T16,3,9.0,6.0,"(2, 33)",,False,
+T17,3,4.0,1.0,"(0, 12)",5.0,True,1.0
+T18,3,50.0,47.0,"(36, None)",74.0,True,24.0

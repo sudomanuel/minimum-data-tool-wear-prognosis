@@ -1,0 +1,4 @@
+model,mae_um,role
+Average-wear-curve (population),18.7,the bar
+Physics-integrated + few-shot self-adaptation (our model),11.2,BEATS baseline
++ condition (rate from Vc/fz/cooling),17.4,condition does NOT help

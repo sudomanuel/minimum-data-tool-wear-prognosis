@@ -1,0 +1,4 @@
+model,t_failure_point,RUL_at_last_obs_point,epistemic_t_failure_q025,epistemic_t_failure_q975,epistemic_members_crossing,structural_delta_vs_Poly2,caveat
+Poly2(t),10.770000000000008,0.7700000000000085,10.57000000000001,11.000000000000009,500/500,0.0,"Con n=10 estas bandas son DESCRIPTIVAS, no calibradas; no constituyen garantia estadistica de cobertura."
+Linear(t),11.84000000000001,1.8400000000000105,11.250000000000009,12.49000000000001,500/500,1.070000000000002,"Con n=10 estas bandas son DESCRIPTIVAS, no calibradas; no constituyen garantia estadistica de cobertura."
+PINN_mono,11.490000000000007,1.4900000000000073,11.23675000000001,11.472000000000008,10/10,0.7199999999999989,"Con n=10 estas bandas son DESCRIPTIVAS, no calibradas; no constituyen garantia estadistica de cobertura."

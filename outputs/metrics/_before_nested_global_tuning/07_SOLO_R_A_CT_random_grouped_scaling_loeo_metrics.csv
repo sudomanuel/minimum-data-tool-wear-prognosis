@@ -1,0 +1,10 @@
+model,feature_subset,data_branch,tuning_branch,tuning_method,validation_type,augmentation_strategy,branch_id,n_features,MAE,RMSE,R2,MAPE_%,n_train,n_train_original,n_train_augmented,n_test,n_folds,notes
+DummyRegressor,SOLO_R,A,CT,none,loeo,grouped_scaling,SOLO_R_A_CT_random_grouped_scaling,93,56.35555555555557,66.6823129787617,-0.23456790123456805,38.43096405818544,36,9,27,10,10,
+Ridge,SOLO_R,A,CT,random,loeo,grouped_scaling,SOLO_R_A_CT_random_grouped_scaling,93,23.854244687017548,29.757116542575073,0.7541470851382559,17.067821078794466,36,9,27,10,10,
+Lasso,SOLO_R,A,CT,random,loeo,grouped_scaling,SOLO_R_A_CT_random_grouped_scaling,93,36.53418828850823,40.485658658850376,0.5449112619240006,24.77072818395833,36,9,27,10,10,
+ElasticNet,SOLO_R,A,CT,random,loeo,grouped_scaling,SOLO_R_A_CT_random_grouped_scaling,93,63.17668403769378,130.17153230859392,-3.704632498512451,31.156020621123677,36,9,27,10,10,
+SVR,SOLO_R,A,CT,random,loeo,grouped_scaling,SOLO_R_A_CT_random_grouped_scaling,93,50.61253624591495,62.50912817319423,-0.08487712850712414,33.8528641522004,36,9,27,10,10,
+RandomForest,SOLO_R,A,CT,random,loeo,grouped_scaling,SOLO_R_A_CT_random_grouped_scaling,93,52.36800000000001,63.383758960793735,-0.11544883096546332,34.41774653889791,36,9,27,10,10,
+XGBoost,SOLO_R,A,CT,random,loeo,grouped_scaling,SOLO_R_A_CT_random_grouped_scaling,93,39.96691131591797,54.16969497255055,0.18528361590831843,25.524553894070745,36,9,27,10,10,
+MLP,SOLO_R,A,CT,none,loeo,grouped_scaling,SOLO_R_A_CT_random_grouped_scaling,93,256.3900262746099,585.0725339340954,-94.04145830542419,120.04073643231901,36,9,27,10,10,
+BNN,SOLO_R,A,CT,none,loeo,grouped_scaling,SOLO_R_A_CT_random_grouped_scaling,93,34.49035110473633,49.773934664075036,0.31214386248022175,19.4098938893247,36,9,27,10,10,

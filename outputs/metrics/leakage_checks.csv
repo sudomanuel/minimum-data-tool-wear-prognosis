@@ -1,0 +1,9 @@
+check_name,status,details
+one_row_per_experiment,PASS,"10 filas, todas unicas por experiment_id"
+target_unique_per_experiment,PASS,10 experimentos con VB_um unico
+no_experiment_in_both_splits,PASS,"train=[66, 68, 69, 70, 73, 74, 75, 77], test=[67, 76]"
+id_columns_excluded,PASS,features=189 sin ids ni target
+test_not_augmented,PASS,ningun archivo de train_augmented contiene experimentos de test
+augmented_rows_keep_vb,PASS,todas las filas augmentadas conservan VB_um del experimento real
+physics_aux_train_only,PASS,experiment_order/tool_id excluidos de X; el PINN los recibe via fit-params solo del TRAIN de cada fold (nunca del test)
+tuning_train_fold_only,PASS,"nested verificado en rama AUGMENTADA: 10 llamadas con 9 experimentos reales (held-out excluido, cubre 10 folds; sin filas sinteticas en inner CV); 1 full-data (SHAP)"

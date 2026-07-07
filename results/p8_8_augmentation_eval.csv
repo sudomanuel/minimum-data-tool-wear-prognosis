@@ -1,0 +1,5 @@
+regime,method,MAE_mean,MAE_std,RMSE_mean,R2_mean,physics_ok,n_seeds
+R0,ninguna,30.12,0.0,35.224,0.112,True,1
+R1,jitter,30.568,0.869,36.404,0.051,True,6
+R2,interpolacion,27.213,1.208,33.501,0.196,True,6
+R3,jitter+interpolacion,27.363,1.615,34.505,0.146,True,6

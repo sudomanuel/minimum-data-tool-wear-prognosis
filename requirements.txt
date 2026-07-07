@@ -1,0 +1,32 @@
+# ============================================================================
+# PHM Tool Wear Estimation - Python dependencies
+# ============================================================================
+# Tested with Python 3.12 on Windows 11 + Ubuntu 22.04 (GitHub Actions)
+# Pinning is loose on purpose — pin in CI lockfile for full reproducibility.
+# ============================================================================
+
+# ---- Core scientific stack ----
+numpy>=1.26,<3
+pandas>=2.0,<3
+scipy>=1.11,<2
+scikit-learn>=1.4,<2
+joblib>=1.3
+
+# ---- Models ----
+xgboost>=2.0
+
+# ---- Interpretability ----
+shap>=0.45
+
+# ---- Visualization ----
+matplotlib>=3.8
+seaborn>=0.13
+pillow>=10.0
+
+# ---- Reporting / output ----
+python-pptx>=1.0
+
+# ---- Optional: interactive dashboard (bonus) ----
+# Uncomment to enable streamlit_app.py
+# streamlit>=1.30
+# plotly>=5.18

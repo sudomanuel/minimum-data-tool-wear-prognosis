@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "feature_cols": [
+    "R_waveform_length_std",
+    "A_band2_ratio_std",
+    "R_dominant_freq_median",
+    "R_dominant_freq_mean",
+    "R_entropy_mean",
+    "A_band3_ratio_std",
+    "A_spectral_skewness_std",
+    "R_spectral_skewness_std",
+    "R_rms_std",
+    "R_freq_variance_mean"
+  ],
+  "vb_0": 103.0,
+  "vb_observed_max": 212.0,
+  "meta": {
+    "schema_version": "1.0",
+    "n_train": 10,
+    "target": "VB_um",
+    "estimator": "RandomForestRegressor",
+    "selection": "reliability_aware + Kendall/Spearman/MMI top-k",
+    "note": "sensor-only deployable model; honest LOEO error on T01 ~24 um"
+  }
+}

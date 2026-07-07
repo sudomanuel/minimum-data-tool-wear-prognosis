@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+# Local/large data (regenerable or lab-restricted)
+data/raw/
+data/interim/
+data/processed/
+outputs/logs/

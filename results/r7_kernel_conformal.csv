@@ -1,0 +1,9 @@
+scheme,PICP,width_um
+kernel h=0.5 (global),70.5,46.9
+kernel h=1.0 (global),91.5,71.6
+kernel h=2.0 (global),98.5,90.2
+kernel h=inf (global),98.3,91.5
+kernel h=0.5 x horizon,68.0,33.1
+kernel h=1.0 x horizon,83.8,41.3
+kernel h=2.0 x horizon,87.4,45.6
+kernel h=inf x horizon,84.4,41.5

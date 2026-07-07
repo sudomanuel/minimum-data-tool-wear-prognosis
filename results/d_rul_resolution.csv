@@ -1,0 +1,3 @@
+set,n,subres,within_1,within_2,within_3,median_abs_err_cuts
+multi-threshold (16 events),16,11,4,6,8,2.85
+safe-stop VB_safe (4 events),4,3,1,1,3,2.6

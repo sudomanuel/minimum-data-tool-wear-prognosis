@@ -1,0 +1,201 @@
+experiment_id,experiment_order,VB_true,VB_pred,model,variant,group
+66,1,103.0,163.44444444444446,Dummy(mean),A_current,classical
+67,2,108.0,162.88888888888889,Dummy(mean),A_current,classical
+68,3,121.0,161.44444444444446,Dummy(mean),A_current,classical
+69,4,136.0,159.77777777777777,Dummy(mean),A_current,classical
+70,5,148.0,158.44444444444446,Dummy(mean),A_current,classical
+73,6,176.0,155.33333333333334,Dummy(mean),A_current,classical
+74,7,181.0,154.77777777777777,Dummy(mean),A_current,classical
+75,8,189.0,153.88888888888889,Dummy(mean),A_current,classical
+76,9,200.0,152.66666666666666,Dummy(mean),A_current,classical
+77,10,212.0,151.33333333333334,Dummy(mean),A_current,classical
+66,1,103.0,143.53373495731515,Ridge,A_current,classical
+67,2,108.0,54.39155720507698,Ridge,A_current,classical
+68,3,121.0,105.6689324080921,Ridge,A_current,classical
+69,4,136.0,167.2551125059436,Ridge,A_current,classical
+70,5,148.0,144.80261363610364,Ridge,A_current,classical
+73,6,176.0,161.60524201681173,Ridge,A_current,classical
+74,7,181.0,176.1918445704119,Ridge,A_current,classical
+75,8,189.0,183.3708937476011,Ridge,A_current,classical
+76,9,200.0,179.8180271573293,Ridge,A_current,classical
+77,10,212.0,2.7757986612820673,Ridge,A_current,classical
+66,1,103.0,113.53600323109205,Lasso,A_current,classical
+67,2,108.0,119.02218861609717,Lasso,A_current,classical
+68,3,121.0,143.14790678870952,Lasso,A_current,classical
+69,4,136.0,174.64122792297456,Lasso,A_current,classical
+70,5,148.0,151.0138167196211,Lasso,A_current,classical
+73,6,176.0,162.63704080751685,Lasso,A_current,classical
+74,7,181.0,158.2026762372995,Lasso,A_current,classical
+75,8,189.0,189.09909675000335,Lasso,A_current,classical
+76,9,200.0,180.57433330061937,Lasso,A_current,classical
+77,10,212.0,102.60092743605105,Lasso,A_current,classical
+66,1,103.0,137.89422431446428,ElasticNet,A_current,classical
+67,2,108.0,91.66876528653877,ElasticNet,A_current,classical
+68,3,121.0,103.60099689957441,ElasticNet,A_current,classical
+69,4,136.0,167.40678031085326,ElasticNet,A_current,classical
+70,5,148.0,142.45809718223762,ElasticNet,A_current,classical
+73,6,176.0,161.35429652597216,ElasticNet,A_current,classical
+74,7,181.0,171.57749163844866,ElasticNet,A_current,classical
+75,8,189.0,188.53803134373692,ElasticNet,A_current,classical
+76,9,200.0,171.91960545722299,ElasticNet,A_current,classical
+77,10,212.0,115.78746925951518,ElasticNet,A_current,classical
+66,1,103.0,171.64989396986675,SVR,A_current,classical
+67,2,108.0,172.84241182729602,SVR,A_current,classical
+68,3,121.0,172.6423198417464,SVR,A_current,classical
+69,4,136.0,173.51806746181143,SVR,A_current,classical
+70,5,148.0,171.17798505633883,SVR,A_current,classical
+73,6,176.0,149.86672704043428,SVR,A_current,classical
+74,7,181.0,149.35019032831744,SVR,A_current,classical
+75,8,189.0,150.81122880499709,SVR,A_current,classical
+76,9,200.0,147.72711470117954,SVR,A_current,classical
+77,10,212.0,144.90837245434523,SVR,A_current,classical
+66,1,103.0,146.49666666666667,RandomForest,A_current,classical
+67,2,108.0,145.57333333333332,RandomForest,A_current,classical
+68,3,121.0,151.65666666666667,RandomForest,A_current,classical
+69,4,136.0,176.58,RandomForest,A_current,classical
+70,5,148.0,149.09,RandomForest,A_current,classical
+73,6,176.0,152.96666666666667,RandomForest,A_current,classical
+74,7,181.0,174.19333333333333,RandomForest,A_current,classical
+75,8,189.0,173.21,RandomForest,A_current,classical
+76,9,200.0,167.09,RandomForest,A_current,classical
+77,10,212.0,139.59333333333333,RandomForest,A_current,classical
+66,1,103.0,126.30552384608565,GradientBoosting,A_current,classical
+67,2,108.0,132.45225810678434,GradientBoosting,A_current,classical
+68,3,121.0,132.17499634875304,GradientBoosting,A_current,classical
+69,4,136.0,190.9082355795933,GradientBoosting,A_current,classical
+70,5,148.0,137.46658945434265,GradientBoosting,A_current,classical
+73,6,176.0,167.80373490879697,GradientBoosting,A_current,classical
+74,7,181.0,192.3715491364093,GradientBoosting,A_current,classical
+75,8,189.0,186.67554125900963,GradientBoosting,A_current,classical
+76,9,200.0,169.09380153900045,GradientBoosting,A_current,classical
+77,10,212.0,119.37500414046694,GradientBoosting,A_current,classical
+66,1,103.0,81.65613401831807,MLP(no physics),A_current,classical
+67,2,108.0,289.7042253634688,MLP(no physics),A_current,classical
+68,3,121.0,87.05041958101135,MLP(no physics),A_current,classical
+69,4,136.0,133.33933631355646,MLP(no physics),A_current,classical
+70,5,148.0,149.32822552851843,MLP(no physics),A_current,classical
+73,6,176.0,83.3365353694234,MLP(no physics),A_current,classical
+74,7,181.0,161.36326180167393,MLP(no physics),A_current,classical
+75,8,189.0,111.7876912744695,MLP(no physics),A_current,classical
+76,9,200.0,206.81716867927253,MLP(no physics),A_current,classical
+77,10,212.0,1828.9329296866663,MLP(no physics),A_current,classical
+66,1,103.0,163.44444444444446,Dummy(mean),B_reliability_aware,classical
+67,2,108.0,162.88888888888889,Dummy(mean),B_reliability_aware,classical
+68,3,121.0,161.44444444444446,Dummy(mean),B_reliability_aware,classical
+69,4,136.0,159.77777777777777,Dummy(mean),B_reliability_aware,classical
+70,5,148.0,158.44444444444446,Dummy(mean),B_reliability_aware,classical
+73,6,176.0,155.33333333333334,Dummy(mean),B_reliability_aware,classical
+74,7,181.0,154.77777777777777,Dummy(mean),B_reliability_aware,classical
+75,8,189.0,153.88888888888889,Dummy(mean),B_reliability_aware,classical
+76,9,200.0,152.66666666666666,Dummy(mean),B_reliability_aware,classical
+77,10,212.0,151.33333333333334,Dummy(mean),B_reliability_aware,classical
+66,1,103.0,143.86182290585808,Ridge,B_reliability_aware,classical
+67,2,108.0,54.442792499508684,Ridge,B_reliability_aware,classical
+68,3,121.0,105.67603052287632,Ridge,B_reliability_aware,classical
+69,4,136.0,167.46166857354444,Ridge,B_reliability_aware,classical
+70,5,148.0,145.11818581507939,Ridge,B_reliability_aware,classical
+73,6,176.0,161.4742909500103,Ridge,B_reliability_aware,classical
+74,7,181.0,176.32842061330007,Ridge,B_reliability_aware,classical
+75,8,189.0,182.77582787763134,Ridge,B_reliability_aware,classical
+76,9,200.0,180.25956051063298,Ridge,B_reliability_aware,classical
+77,10,212.0,12.611971780768869,Ridge,B_reliability_aware,classical
+66,1,103.0,113.53600323109205,Lasso,B_reliability_aware,classical
+67,2,108.0,119.02218861609717,Lasso,B_reliability_aware,classical
+68,3,121.0,143.14790678870952,Lasso,B_reliability_aware,classical
+69,4,136.0,174.64122792297456,Lasso,B_reliability_aware,classical
+70,5,148.0,151.0138167196211,Lasso,B_reliability_aware,classical
+73,6,176.0,162.63704080751685,Lasso,B_reliability_aware,classical
+74,7,181.0,158.2026762372995,Lasso,B_reliability_aware,classical
+75,8,189.0,189.09909675000335,Lasso,B_reliability_aware,classical
+76,9,200.0,180.57433330061937,Lasso,B_reliability_aware,classical
+77,10,212.0,102.60092743605105,Lasso,B_reliability_aware,classical
+66,1,103.0,137.9461085705561,ElasticNet,B_reliability_aware,classical
+67,2,108.0,91.6210136018058,ElasticNet,B_reliability_aware,classical
+68,3,121.0,103.61396256556256,ElasticNet,B_reliability_aware,classical
+69,4,136.0,167.44615936883275,ElasticNet,B_reliability_aware,classical
+70,5,148.0,142.5818615117308,ElasticNet,B_reliability_aware,classical
+73,6,176.0,161.29087694818742,ElasticNet,B_reliability_aware,classical
+74,7,181.0,171.6021720597017,ElasticNet,B_reliability_aware,classical
+75,8,189.0,188.30766013984461,ElasticNet,B_reliability_aware,classical
+76,9,200.0,171.91167836974267,ElasticNet,B_reliability_aware,classical
+77,10,212.0,133.84583054727972,ElasticNet,B_reliability_aware,classical
+66,1,103.0,171.6846115356114,SVR,B_reliability_aware,classical
+67,2,108.0,172.79687078669667,SVR,B_reliability_aware,classical
+68,3,121.0,172.60178452702016,SVR,B_reliability_aware,classical
+69,4,136.0,173.4760526066632,SVR,B_reliability_aware,classical
+70,5,148.0,171.24227068960818,SVR,B_reliability_aware,classical
+73,6,176.0,149.79460051050802,SVR,B_reliability_aware,classical
+74,7,181.0,149.17441218100242,SVR,B_reliability_aware,classical
+75,8,189.0,150.62534964913544,SVR,B_reliability_aware,classical
+76,9,200.0,147.65305127786698,SVR,B_reliability_aware,classical
+77,10,212.0,144.73760440200567,SVR,B_reliability_aware,classical
+66,1,103.0,144.7,RandomForest,B_reliability_aware,classical
+67,2,108.0,144.20333333333335,RandomForest,B_reliability_aware,classical
+68,3,121.0,148.2,RandomForest,B_reliability_aware,classical
+69,4,136.0,174.76333333333332,RandomForest,B_reliability_aware,classical
+70,5,148.0,147.70666666666668,RandomForest,B_reliability_aware,classical
+73,6,176.0,157.89666666666668,RandomForest,B_reliability_aware,classical
+74,7,181.0,172.2,RandomForest,B_reliability_aware,classical
+75,8,189.0,171.08,RandomForest,B_reliability_aware,classical
+76,9,200.0,169.27333333333334,RandomForest,B_reliability_aware,classical
+77,10,212.0,143.78,RandomForest,B_reliability_aware,classical
+66,1,103.0,119.13795480927809,GradientBoosting,B_reliability_aware,classical
+67,2,108.0,140.77270951450353,GradientBoosting,B_reliability_aware,classical
+68,3,121.0,143.10336718450762,GradientBoosting,B_reliability_aware,classical
+69,4,136.0,191.85516695433603,GradientBoosting,B_reliability_aware,classical
+70,5,148.0,141.48421232413105,GradientBoosting,B_reliability_aware,classical
+73,6,176.0,168.89783035477237,GradientBoosting,B_reliability_aware,classical
+74,7,181.0,197.86593290079446,GradientBoosting,B_reliability_aware,classical
+75,8,189.0,188.61380895816595,GradientBoosting,B_reliability_aware,classical
+76,9,200.0,178.93147639798386,GradientBoosting,B_reliability_aware,classical
+77,10,212.0,126.28529513900651,GradientBoosting,B_reliability_aware,classical
+66,1,103.0,108.40789013942525,MLP(no physics),B_reliability_aware,classical
+67,2,108.0,193.13202851523045,MLP(no physics),B_reliability_aware,classical
+68,3,121.0,48.54863896123615,MLP(no physics),B_reliability_aware,classical
+69,4,136.0,148.4782344317351,MLP(no physics),B_reliability_aware,classical
+70,5,148.0,144.44533555344373,MLP(no physics),B_reliability_aware,classical
+73,6,176.0,79.09523043217419,MLP(no physics),B_reliability_aware,classical
+74,7,181.0,156.1737870670245,MLP(no physics),B_reliability_aware,classical
+75,8,189.0,107.59165774380483,MLP(no physics),B_reliability_aware,classical
+76,9,200.0,208.125586388971,MLP(no physics),B_reliability_aware,classical
+77,10,212.0,1884.9619275628745,MLP(no physics),B_reliability_aware,classical
+66,1,103.0,100.81613159179688,PINN_no_physics,pinn_xmin,pinn
+67,2,108.0,112.61470794677734,PINN_no_physics,pinn_xmin,pinn
+68,3,121.0,118.65852355957031,PINN_no_physics,pinn_xmin,pinn
+69,4,136.0,137.99566650390625,PINN_no_physics,pinn_xmin,pinn
+70,5,148.0,157.60931396484375,PINN_no_physics,pinn_xmin,pinn
+73,6,176.0,168.04379272460938,PINN_no_physics,pinn_xmin,pinn
+74,7,181.0,185.067626953125,PINN_no_physics,pinn_xmin,pinn
+75,8,189.0,189.6222686767578,PINN_no_physics,pinn_xmin,pinn
+76,9,200.0,186.9446563720703,PINN_no_physics,pinn_xmin,pinn
+77,10,212.0,191.27590942382812,PINN_no_physics,pinn_xmin,pinn
+66,1,103.0,100.98503112792969,PINN_mono,pinn_xmin,pinn
+67,2,108.0,112.56886291503906,PINN_mono,pinn_xmin,pinn
+68,3,121.0,119.34431457519531,PINN_mono,pinn_xmin,pinn
+69,4,136.0,138.0527801513672,PINN_mono,pinn_xmin,pinn
+70,5,148.0,157.60853576660156,PINN_mono,pinn_xmin,pinn
+73,6,176.0,168.00726318359375,PINN_mono,pinn_xmin,pinn
+74,7,181.0,184.8790283203125,PINN_mono,pinn_xmin,pinn
+75,8,189.0,189.68434143066406,PINN_mono,pinn_xmin,pinn
+76,9,200.0,186.75511169433594,PINN_mono,pinn_xmin,pinn
+77,10,212.0,191.17654418945312,PINN_mono,pinn_xmin,pinn
+66,1,103.0,140.0321044921875,PINN_rate,pinn_xmin,pinn
+67,2,108.0,162.27566528320312,PINN_rate,pinn_xmin,pinn
+68,3,121.0,103.17741394042969,PINN_rate,pinn_xmin,pinn
+69,4,136.0,173.5524444580078,PINN_rate,pinn_xmin,pinn
+70,5,148.0,165.15896606445312,PINN_rate,pinn_xmin,pinn
+73,6,176.0,120.09988403320312,PINN_rate,pinn_xmin,pinn
+74,7,181.0,217.35202026367188,PINN_rate,pinn_xmin,pinn
+75,8,189.0,137.08712768554688,PINN_rate,pinn_xmin,pinn
+76,9,200.0,155.79061889648438,PINN_rate,pinn_xmin,pinn
+77,10,212.0,142.94686889648438,PINN_rate,pinn_xmin,pinn
+66,1,103.0,168.81002807617188,PINN_full,pinn_xmin,pinn
+67,2,108.0,189.71630859375,PINN_full,pinn_xmin,pinn
+68,3,121.0,51.742759704589844,PINN_full,pinn_xmin,pinn
+69,4,136.0,241.015380859375,PINN_full,pinn_xmin,pinn
+70,5,148.0,196.530029296875,PINN_full,pinn_xmin,pinn
+73,6,176.0,116.48992156982422,PINN_full,pinn_xmin,pinn
+74,7,181.0,217.9676055908203,PINN_full,pinn_xmin,pinn
+75,8,189.0,138.86935424804688,PINN_full,pinn_xmin,pinn
+76,9,200.0,153.53890991210938,PINN_full,pinn_xmin,pinn
+77,10,212.0,134.84652709960938,PINN_full,pinn_xmin,pinn

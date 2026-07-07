@@ -1,0 +1,5 @@
+baseline,trajectory,n,loeo_mae,loeo_max_err,legacy_ref_mae
+Linear(t),official_12pt_physical,12,4.086,7.955,9.93
+Poly2(t),official_12pt_physical,12,3.804,7.824,4.96
+Linear(t),official_10pt_recorded_gapped,10,3.101,6.597,9.93
+Poly2(t),official_10pt_recorded_gapped,10,3.828,6.477,4.96

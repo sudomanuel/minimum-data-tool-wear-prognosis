@@ -1,0 +1,16 @@
+driver,spearman_vs_VB,spearman_vs_rate,spearman_monotonic
+R_energy_mean_derived,0.697,0.762,0.697
+R_peak_to_peak_mean_derived,0.539,0.326,0.539
+A_energy_mean_derived,0.491,0.326,0.491
+R_rms_mean_derived,0.455,0.762,0.455
+R_rms_mean_6_contacts,0.455,0.762,0.455
+R_std_mean_derived,0.455,0.762,0.455
+A_peak_to_peak_mean_derived,0.358,-0.117,0.358
+R_energy_total_6_contacts,0.345,0.762,0.345
+A_to_R_rms_ratio,-0.309,-0.711,-0.309
+A_to_R_energy_ratio,-0.309,-0.711,-0.309
+total_energy_6_contacts,0.261,0.603,0.261
+A_std_mean_derived,0.188,0.276,0.188
+A_rms_mean_6_contacts,0.188,0.276,0.188
+A_rms_mean_derived,0.188,0.276,0.188
+A_energy_total_6_contacts,0.176,0.326,0.176

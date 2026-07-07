@@ -1,0 +1,4 @@
+model,vb_at_last_obs,epistemic_band_um,tfail_median,tfail_ci,rul_extrapolated,exp77_drop_shift_um
+Linear(t),212.3,4.4,21.25,"t_fail medio 21.3 [20.6, 21.6] (cruza en 100% de las muestras)",True,-0.15
+Poly2(t),209.9,10.7,23.78,"t_fail medio 23.8 [19.6, 25.7] (cruza en 39% de las muestras)",True,-3.67
+PINN_mono,212.2,0.1,no_cross,sin cruce dentro del horizonte,True,n/a

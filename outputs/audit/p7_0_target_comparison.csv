@@ -1,0 +1,13 @@
+experiment_id,VB_um_vb_targets,VB_um_auxiliary_source_microscope_vs_legacy,abs_diff,in_code_pipeline,interpretation
+66,85.0,103,18.0,True,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+67,103.0,108,5.0,True,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+68,119.0,121,2.0,True,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+69,136.0,136,0.0,True,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+70,150.0,148,2.0,True,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+71,,159,,False,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+72,,170,,False,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+73,168.0,176,8.0,True,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+74,190.0,181,9.0,True,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+75,215.0,189,26.0,True,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+76,245.0,200,45.0,True,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)
+77,280.0,212,68.0,True,official target VB; auxiliary col = legacy microscope_vs (not official until source confirmed)

@@ -1,0 +1,3 @@
+path,n_rows,columns,value_column,experiment_ids,value_min,value_max,declared_units,separator
+data/targets/microscope_vs.csv,12,experiment_id|VS_final_um,VS_final_um,66;67;68;69;70;71;72;73;74;75;76;77,103,212,um (in column name),;
+data/raw/targets/vb_targets.csv,10,tool_id|experiment_id|experiment_order|VB_um,VB_um,66;67;68;69;70;73;74;75;76;77,85,280,um (in column name),","

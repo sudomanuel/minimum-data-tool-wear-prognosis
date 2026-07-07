@@ -1,0 +1,4 @@
+model,MAE_um,RMSE_um,R2
+Ridge (linear),46.4,60.2,-0.97
+RandomForest,36.1,48.2,-0.26
+MLP neural net,67.0,82.4,-2.69

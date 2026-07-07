@@ -1,0 +1,2 @@
+cfg,MAE,RMSE,MAPE,MaxAE,R2
+m4_wls_gamma3_mmatched_localp,5.63,6.02,3.2,7.9,0.7

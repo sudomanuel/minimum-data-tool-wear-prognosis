@@ -1,0 +1,8 @@
+model,target_source,n_points,uses_signal,uses_time,MAE,notes,RMSE,R2,monotonicity_violations,physical_residual
+Linear(t) official,microscope_vb.csv,10,False,True,3.1,"P8.0 time-aware (recorded-10, gapped t)",,,,
+Poly2(t) official,microscope_vb.csv,10,False,True,3.83,P8.0 time-aware,,,,
+best classical ML official (ElasticNet/B_reliability_aware),microscope_vb.csv,10,True,False,23.662,"sensor features, LOEO",31.642,0.283,,
+best PINN official (PINN_mono),microscope_vb.csv,10,True,True,6.653,x_min + t,9.015,0.942,1.0,
+best PINN physical-consistency (PINN_mono),microscope_vb.csv,10,True,True,6.653,best physics-constrained variant,,,1.0,68.9
+historical P1 best (legacy),vb_targets.csv,10,True,False,19.07,ElasticNet SOLO_A — legacy target 85-280,,,,
+historical P3 best (legacy),vb_targets.csv,10,True,True,18.57,PINN_mono — legacy target 85-280,,,,

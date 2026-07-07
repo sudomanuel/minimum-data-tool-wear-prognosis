@@ -1,0 +1,4 @@
+metric,value
+microscope_only_onestep_MAE_um,4.0
+withheld_cut_physics_only_MAE_um,7.8
+withheld_cut_physics_plus_vib_MAE_um,7.7

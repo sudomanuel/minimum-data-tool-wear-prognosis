@@ -1,0 +1,4 @@
+name,m,p_strategy,fit,lam,MAE,MAE_median,MAE_min,MAE_max,RMSE,MAPE_pct,MaxAE,R2_pooled,R2_median,R2_pos,R2_def,n_tools
+"Ours -- conservative (optimal, m=2)",2,full,theil_sen,0.2,12.7,8.2,1.0,42.3,14.7,7.2,22.8,0.4,-0.11,5,16,18
+"Ours -- conservative (optimal, m=3)",3,full,siegel,0.0,11.3,9.0,0.0,30.8,12.2,6.4,17.2,0.49,-1.91,4,15,18
+"Ours -- precise (optimal, m=4)",4,m_matched,theil_sen,0.0,9.1,5.7,0.0,25.3,9.3,5.2,10.5,0.7,0.73,2,2,18

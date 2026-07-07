@@ -1,0 +1,6 @@
+test,metric,value,reference,note
+T0_reproduce,LOEO_MAE,6.74,6.65,R2=0.94; matches headline
+T0_dummy,LOEO_MAE,38.0,,no-skill floor (predict train mean)
+T1_holdout_isolation,status,PASS,,held-out never in train arrays
+T2_label_permutation,LOEO_MAE,45.24,38.0,+/-9.44; collapses to ~dummy -> NO leakage
+T3_drop_t,LOEO_MAE,76.4,24.16,x-only; skill is t-driven (degeneracy)

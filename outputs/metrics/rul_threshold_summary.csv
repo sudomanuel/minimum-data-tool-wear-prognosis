@@ -1,0 +1,4 @@
+model,VB_failure_um,t_failure_pred,max_observed_t,max_observed_VB,extrapolation_horizon,crosses_threshold,warning,interpretation
+Poly2(t),300.0,10.770000000000008,10.0,280.0,20.0,True,parabola sin restricciones fuera de rango,cruza 300 um en t=10.77 (+0.77 pasos tras la ultima observacion)
+Linear(t),300.0,11.84000000000001,10.0,280.0,20.0,True,recta: ignora la aceleracion final del desgaste,cruza 300 um en t=11.84 (+1.84 pasos tras la ultima observacion)
+PINN_mono,300.0,11.490000000000009,10.0,280.0,20.0,True,PINN se aplana al final (P3): cruce tardio probable -> riesgo de SOBREESTIMAR RUL,cruza 300 um en t=11.49 (+1.49 pasos tras la ultima observacion)

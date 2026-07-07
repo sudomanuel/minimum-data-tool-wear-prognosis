@@ -1,0 +1,27 @@
+# rul_thresholds.yaml — flank-wear failure thresholds for RUL derivation (P8.0).
+# RUL is always derived from the predicted VB trajectory by threshold crossing.
+# No official lab threshold yet -> 300 um (ISO-style average flank wear) is the default.
+
+default_threshold_um: 300
+
+thresholds_um:
+  iso_average_flank_wear: 300     # ISO 3685-style average flank wear criterion (default)
+  max_flank_wear_option: 600      # ISO max flank wear VB_max option (upper bound)
+  sensitivity_low: 220            # sensitivity sweep
+  sensitivity_mid: 250            # sensitivity sweep
+  lab_defined: null               # set if the laboratory provides an official threshold
+  data_driven_severe_onset: null  # set only if supported by an accelerated-wear knee analysis
+
+# VB_0 (initial wear) for the Health Index baseline; taken from the first official VB point.
+vb_initial_um: 103                # official microscope_vb.csv exp 66 (was 85 in legacy subset)
+
+# Honest reporting policy: if the predicted trajectory does not cross a threshold inside the
+# observed range, mark rul_extrapolated=true and report uncertainty; do not overclaim.
+extrapolation:
+  t_max: 24                       # search horizon in experiment-order steps
+  grid_step: 0.01
+  rul_units: experiment_order_steps
+notes: >
+  Official VB trajectory (microscope_vb.csv) reaches only ~212 um, BELOW every threshold here,
+  so all RUL values are EXTRAPOLATED for the single tool T01. This is more extrapolative than
+  the legacy subset (which reached 280). RUL has no failure ground truth on T01.

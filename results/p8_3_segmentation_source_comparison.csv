@@ -1,0 +1,5 @@
+feature_branch,active_window_refined,full_contact_original,winner,delta
+B1_sensor_only,26.236,29.861,active_window_refined,-3.625
+B2_sensor_plus_time,3.888,5.464,active_window_refined,-1.5760000000000005
+B3_reliability_aware,25.797,29.076,active_window_refined,-3.279
+B4_PINN_ready_minimal,23.314,19.776,full_contact_original,3.5380000000000003

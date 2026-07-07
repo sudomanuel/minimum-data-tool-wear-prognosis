@@ -1,0 +1,3 @@
+method,coverage_pct,mean_width_um
+GLOBAL conformal (current),98.0,92.0
+NORMALIZED conformal (horizon-adaptive),82.0,48.0

@@ -1,0 +1,5 @@
+threshold_um,official_max_vb,t_failure,rul_at_last_obs,rul_extrapolated,legacy_t_failure_300
+220,212.0,13.7,1.7,True,
+250,212.0,19.78,7.78,True,
+300,212.0,no_crossing<=t24,n/a,True,10.77
+600,212.0,no_crossing<=t24,n/a,True,

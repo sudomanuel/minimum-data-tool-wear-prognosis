@@ -1,0 +1,38 @@
+feature_name,sensor_axis,feature_family,mean_relative_error_4vs6,max_relative_error_4vs6,reliability_flag,notes
+A_energy_total_6_contacts,A,energy_total,0.2063,0.2669,unstable,aggregate; signed bias dropping p5p6: -20.6%; all-pairs p95 |err|: 53.7%
+A_rms_mean_6_contacts,A,rms_mean,0.032,0.074,robust,aggregate; signed bias dropping p5p6: +3.2%; all-pairs p95 |err|: 10.3%
+A_rms_std_6_contacts,A,rms_std,0.1739,0.688,unstable,aggregate; signed bias dropping p5p6: +2.0%; all-pairs p95 |err|: 72.2%
+A_to_R_energy_ratio,A,energy_ratio,0.0337,0.0535,robust,aggregate; signed bias dropping p5p6: -2.2%; all-pairs p95 |err|: 7.2%
+A_to_R_rms_ratio,A,rms_ratio,0.0216,0.067,robust,aggregate; signed bias dropping p5p6: -1.2%; all-pairs p95 |err|: 4.9%
+R_energy_total_6_contacts,R,energy_total,0.1903,0.2339,unstable,aggregate; signed bias dropping p5p6: -19.0%; all-pairs p95 |err|: 59.2%
+R_rms_mean_6_contacts,R,rms_mean,0.0448,0.0906,robust,aggregate; signed bias dropping p5p6: +4.5%; all-pairs p95 |err|: 12.3%
+R_rms_std_6_contacts,R,rms_std,0.1891,0.3234,unstable,aggregate; signed bias dropping p5p6: -1.1%; all-pairs p95 |err|: 83.6%
+total_energy_6_contacts,both,energy_total,0.1997,0.2563,unstable,aggregate; signed bias dropping p5p6: -20.0%; all-pairs p95 |err|: 57.1%
+A_mean_p5/p6 (per-contact),A,mean,1.1991,2.4758,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_std_p5/p6 (per-contact),A,std,0.1789,0.3981,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_rms_p5/p6 (per-contact),A,rms,0.1789,0.3981,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_max_p5/p6 (per-contact),A,max,0.2887,0.5649,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_min_p5/p6 (per-contact),A,min,0.2678,0.721,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_peak_to_peak_p5/p6 (per-contact),A,peak_to_peak,0.2834,0.6383,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_skewness_p5/p6 (per-contact),A,skewness,34.1904,591.687,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_kurtosis_p5/p6 (per-contact),A,kurtosis,3.2637,26.3249,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_crest_factor_p5/p6 (per-contact),A,crest_factor,0.1577,0.4335,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_energy_p5/p6 (per-contact),A,energy,0.3223,0.5709,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_absolute_mean_p5/p6 (per-contact),A,absolute_mean,0.1914,0.5436,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_dominant_freq_hz_p5/p6 (per-contact),A,dominant_freq_hz,0.233,0.7966,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_spectral_energy_p5/p6 (per-contact),A,spectral_energy,0.3523,0.6123,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+A_spectral_centroid_hz_p5/p6 (per-contact),A,spectral_centroid_hz,0.3738,1.31,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_mean_p5/p6 (per-contact),R,mean,1.6853,15.0831,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_std_p5/p6 (per-contact),R,std,0.1824,0.5196,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_rms_p5/p6 (per-contact),R,rms,0.1824,0.5196,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_max_p5/p6 (per-contact),R,max,0.2105,0.7426,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_min_p5/p6 (per-contact),R,min,0.235,0.5632,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_peak_to_peak_p5/p6 (per-contact),R,peak_to_peak,0.1899,0.6483,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_skewness_p5/p6 (per-contact),R,skewness,2.1774,12.7927,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_kurtosis_p5/p6 (per-contact),R,kurtosis,2.8683,42.6529,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_crest_factor_p5/p6 (per-contact),R,crest_factor,0.1499,0.6633,moderate,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_energy_p5/p6 (per-contact),R,energy,0.2455,0.6579,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_absolute_mean_p5/p6 (per-contact),R,absolute_mean,0.2188,0.9328,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_dominant_freq_hz_p5/p6 (per-contact),R,dominant_freq_hz,0.2112,0.6375,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_spectral_energy_p5/p6 (per-contact),R,spectral_energy,0.2111,0.6288,unstable,median-imputation error proxy (what the pipeline imputes at exp 77)
+R_spectral_centroid_hz_p5/p6 (per-contact),R,spectral_centroid_hz,0.1448,0.3094,moderate,median-imputation error proxy (what the pipeline imputes at exp 77)

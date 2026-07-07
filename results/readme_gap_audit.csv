@@ -1,0 +1,5 @@
+gap,MAE,R2
+ElasticNet_fair,45.9,-0.75
+SHAP_selection,43.0,-0.4
+PINN_fewshot_m3,15.87,
+PINN_fewshot_m4,14.29,

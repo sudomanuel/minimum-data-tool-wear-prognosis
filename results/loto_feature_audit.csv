@@ -1,0 +1,4 @@
+view,r2,mae,top_features
+condition only,-0.23422654302721058,4.261111852157968,vc:18;cool:18;fz:18
+sensors (fold-safe sel+SHAP),-1.125314211248495,5.459795341982019,A_skewness__std:18;R_zero_crossing_rate__std:18;R_wavelet_d3_ratio__std:12;R_band2_ratio__mean:11;R_wavelet_entropy__mean:9;A_total_power__std:9
+condition + sensors,-1.0486058164946286,5.416560423574015,A_skewness__std:18;R_zero_crossing_rate__std:18;R_band2_ratio__mean:12;R_wavelet_d3_ratio__std:10;R_wavelet_entropy__mean:9;A_total_power__std:9

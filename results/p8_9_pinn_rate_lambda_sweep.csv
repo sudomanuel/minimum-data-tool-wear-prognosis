@@ -1,0 +1,6 @@
+lambda_rate,rate_form,MAE,R2,mono_violations,insample_rate_neg_fraction
+0.0,none,16.972,0.665,4,0.0
+0.01,softplus,24.045,0.272,6,0.0
+0.03,softplus,26.177,0.131,6,0.0
+0.1,softplus,27.538,0.076,6,0.0
+0.3,softplus,28.389,0.108,5,0.0

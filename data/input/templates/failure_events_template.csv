@@ -1,0 +1,4 @@
+tool_id,last_measured_order,last_measured_vb_um,breakage_observed,breakage_order,notes
+T0X,10,212.0,true,,"T_R blank -> right-censored (breakage after last measurement, exact order unknown)"
+T0Y,12,265.0,true,13,"T_R=13 recorded -> interval-censored (T_L,T_R]=(12,13]"
+T0Z,9,190.0,false,,"no breakage observed -> trajectory only, no RUL endpoint"

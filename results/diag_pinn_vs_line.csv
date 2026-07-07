@@ -1,0 +1,5 @@
+model,inputs,LOEO_MAE,note
+Linear(t),orden (t),4.97,control / regresion lineal
+Poly2(t),orden (t),5.99,control / polinomio grado 2
+PINN (solo t),"orden (t), sin sensores",3.82,red ajustando la recta
+"PINN_mono (x,t)",orden (t) + vibracion,6.74,titular 6.65

@@ -1,0 +1,5 @@
+variant,PICP,width,beats
+raw+sym,90.2,50.5,True
+raw+asym,79.1,41.7,False
+debiased+sym,89.8,53.9,False
+debiased+asym,77.2,44.8,False

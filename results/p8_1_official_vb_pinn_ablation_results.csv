@@ -1,0 +1,5 @@
+group,variant,model,uses_physics,MAE,RMSE,R2,monotonicity_violations,negative_rate_fraction,physical_residual_smoothness,exp77_residual
+pinn,pinn_xmin,PINN_no_physics,False,6.717,8.989,0.942,1,0.111,74.3,-20.72
+pinn,pinn_xmin,PINN_mono,True,6.653,9.015,0.942,1,0.111,68.9,-20.82
+pinn,pinn_xmin,PINN_rate,True,42.127,44.948,-0.446,5,0.556,11685.4,-69.05
+pinn,pinn_xmin,PINN_full,True,64.055,66.874,-2.202,5,0.556,32962.7,-77.15

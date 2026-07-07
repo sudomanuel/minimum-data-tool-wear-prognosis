@@ -1,0 +1,11 @@
+m,model,MAE
+3,fewshot,20.94
+3,avgcurve,15.66
+3,affine,17.48
+3,blend,17.66
+3,twophase,21.32
+4,fewshot,30.1
+4,avgcurve,15.79
+4,affine,15.16
+4,blend,19.48
+4,twophase,121.76

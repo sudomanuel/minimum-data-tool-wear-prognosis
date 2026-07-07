@@ -1,0 +1,28 @@
+# Failure-event registry for breakage-based, interval-censored RUL evaluation.
+# Drop in one block per tool. The breakage endpoint is interval-censored:
+#   T_f in (T_L, T_R]
+#   T_L = experiment-order of the LAST measured VB before breakage
+#   T_R = experiment-order at which breakage was recorded / first observed
+# If T_R is unknown ("only known that the tool broke after the last experiment"),
+# leave breakage_order null  -> the endpoint is RIGHT-censored (one-sided safety
+# check only). Adding a new tool == adding a block here; NO code change needed.
+
+life_coordinate: experiment_order      # ordinal; NOT physical time/length
+
+tools:
+  T01:
+    last_measured_order: 10            # T_L  (exp 77, VB = 212 um)
+    last_measured_vb_um: 212.0
+    breakage_observed: true
+    breakage_order: null               # T_R unknown -> right-censored for T01
+    breakage_window_assumed: [11, 12]  # parametric (T_L, T_R] used only for sensitivity reporting
+    notes: "Tool broke after the last microscope VB measurement; exact breakage order not recorded."
+
+  # --- template for future tools (uncomment and fill; then re-run the script) ---
+  # T02:
+  #   last_measured_order: <int>
+  #   last_measured_vb_um: <float>
+  #   breakage_observed: true
+  #   breakage_order: <int|null>       # set this when the breakage experiment IS recorded
+  #   breakage_window_assumed: [<int>, <int>]
+  #   notes: ""

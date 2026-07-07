@@ -1,0 +1,4 @@
+cfg,MAE,RMSE,MAPE,MaxAE,R2
+m3_siegel_localp200,11.02,12.02,6.28,17.03,0.5
+m4_wls_mmatched,7.27,7.48,4.19,8.59,0.71
+m4_wls_localp200,7.0,7.25,4.02,8.64,0.71

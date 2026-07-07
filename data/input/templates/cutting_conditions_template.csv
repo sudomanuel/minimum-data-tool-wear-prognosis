@@ -1,0 +1,2 @@
+tool_id,Vc_m_per_min,feed_mm_per_rev,depth_of_cut_mm,workpiece_material,tool_geometry,coolant,notes
+T0X,,,,,,,"OPTIONAL. Leave blank if unavailable. Needed ONLY for a Taylor-life prior and physical life coordinate; modeling does not require it. If Vc/feed/depth are constant or missing, Taylor stays a non-identifiable conceptual baseline."

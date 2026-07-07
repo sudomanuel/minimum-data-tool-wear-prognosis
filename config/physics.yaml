@@ -1,0 +1,36 @@
+# physics.yaml — parametros fisicos del framework PHM (P4+).
+# Todos los valores son CONFIGURABLES; los provisionales estan marcados.
+
+# Umbral de falla por desgaste de flanco (ISO 3685 sugiere ~0.3 mm para
+# condiciones tipicas, pero NO hay valor oficial del experimento -> provisional).
+vb_failure_um: 300
+vb_failure_source: "provisional_configurable_threshold"
+
+# Variable temporal: experiment_order es un PROXY ordenado, no tiempo fisico.
+# Si en el futuro existe cutting_time o cutting_length, DEBE reemplazarla aqui.
+time_variable: "experiment_order"
+time_variable_is_proxy: true
+
+# T01 nunca alcanza el umbral dentro de los datos observados:
+# max VB observado = 280 um < 300 um -> toda RUL en T01 es EXTRAPOLACION
+# conceptual, sin ground truth de falla y sin metricas de error de RUL.
+t01_reaches_failure: false
+max_observed_vb_um: 280
+
+# Unidades de la RUL derivada (pasos del proxy temporal, no minutos).
+rul_units: "experiment_order_steps"
+
+# Horizonte de extrapolacion para buscar el cruce con el umbral
+# (en unidades de time_variable; si no cruza dentro del horizonte -> no_crossing).
+extrapolation_t_max: 20
+extrapolation_grid_step: 0.01
+
+# Politica de la senal x para extrapolar curvas que dependen de x (PINN):
+# dentro del rango observado se interpola x(t); mas alla del ultimo
+# experimento se mantiene x = x(t_max_observado) ("el estado actual del
+# sensor persiste") — supuesto naive declarado.
+x_extrapolation_policy: "hold_last_observed"
+
+# Lambdas de la PINN usadas para la curva fisico-informada de RUL (P3:
+# PINN_mono fue la mejor variante por trade-off; rate/full degradan fuerte).
+rul_pinn_variant: "PINN_mono"

@@ -1,0 +1,4 @@
+tool_id,experiment_id,within_tool_order,vb_um,has_signal,n_valid_contacts,signal_file,photo_file,usable_sensor,usable_trajectory,notes
+T0X,1,1,103.0,true,12,signals/exp01.csv,photos/exp01.png,true,true,example row - replace
+T0X,2,2,,false,0,,photos/exp02.png,false,true,signal-less experiment (VB-only)
+T0X,3,3,148.0,true,4,signals/exp03.csv,photos/exp03.png,false,true,too few valid contacts -> sensor-excluded

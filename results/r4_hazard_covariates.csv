@@ -1,0 +1,11 @@
+covariate,gamma2,dLL,LRT_p,verdict
+R_spectral_kurtosis__mean,0.623,3.334,0.0098,SIGNAL (p<0.05)
+R_kurtosis__std,0.64,2.502,0.0253,SIGNAL (p<0.05)
+A_crest_factor__mean,-0.467,1.558,0.0775,weak (p<0.15)
+A_kurtosis__std,0.307,1.434,0.0903,weak (p<0.15)
+R_kurtosis__mean,0.268,1.06,0.1455,weak (p<0.15)
+A_impulse_factor__mean,-0.37,0.992,0.159,none
+A_spectral_kurtosis__mean,0.274,0.688,0.2406,none
+R_crest_factor__mean,-0.25,0.447,0.3441,none
+A_kurtosis__mean,0.133,0.192,0.5359,none
+R_impulse_factor__mean,-0.115,0.098,0.6574,none

@@ -1,0 +1,11 @@
+variant,MAE,R2
+early_concat,37.0,-0.14
+A_only,40.3,-0.39
+R_only,35.5,0.01
+late_avg,36.4,-0.09
+late_stack,39.1,-0.19
+cca,39.8,-0.12
+mb_pls,37.0,-0.14
+ratio_AR,36.0,-0.06
+fusion_mean_speckurt,,
+fusion_pc1_transient,,

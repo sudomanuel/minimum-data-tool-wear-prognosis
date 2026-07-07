@@ -1,0 +1,13 @@
+criterion,value,details
+1_tuning_train_fold_only_PASS,True,"nested verificado en rama AUGMENTADA: 10 llamadas con 9 experimentos reales (held-out excluido, cubre 10 folds; sin filas sinteticas en inne"
+2_full_audit_PASS,True,8/8 checks PASS
+3_winner_reproduced,True,ElasticNet@SOLO_A_N_ST MAE=19.07 (expected ~19.07)
+4_nested_CT_not_better_than_ST,True,best SOLO_A_N_CT=26.03 vs ST=19.07 (delta=+6.96)
+5_no_tuned_branch_changes_winner_gt5um,True,best tuned MAE anywhere=19.42 vs winner=19.07
+6_full_benchmark_incomplete_documented,True,27/36 branches done; resumable runner: scripts/run_nested_benchmark_metrics.py
+winner_before,True,ElasticNet @ SOLO_A_N_CT_random MAE=19.07 RMSE=26.55 R2=0.804 MAPE=14.83
+winner_after,True,ElasticNet @ SOLO_A_N_ST MAE=19.07 RMSE=26.55 R2=0.804 MAPE=14.83
+winner_changed,True,"before=(ElasticNet,SOLO_A_N_CT_random) after=(ElasticNet,SOLO_A_N_ST)"
+tuning_helps_after,False,N: best ST=19.07 best CT=26.03 delta=+6.96 um
+augmentation_helps_after,False,best N=19.07 best A=19.37 delta=+0.31 um
+solo_a_still_dominates,True,winner view=SOLO_A

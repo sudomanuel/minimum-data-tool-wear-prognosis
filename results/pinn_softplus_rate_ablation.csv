@@ -1,0 +1,6 @@
+variant,rate_form,lambda_mono,lambda_rate,MAE,RMSE,R2,MAPE,mono_violations,negative_rate_fraction,exp77_residual,final_point_residual,end_slope_ratio,rul_extrapolated,insample_rate_neg_fraction,insample_rate_min,MAE_seed_mean,MAE_seed_std,mono_seed_std
+P0_data_only,none,0.0,0.0,17.622,22.6,0.634,12.74,4,0.444,-38.13,-38.13,-0.792,True,0.0,3.28,,,
+P1_mono,none,1.0,0.0,17.552,22.591,0.635,12.69,4,0.444,-38.18,-38.18,-0.778,True,0.0,3.28,,,
+P2_old_rate,old,0.0,0.1,27.878,39.172,-0.099,18.55,4,0.444,-97.77,-97.77,-5.789,True,0.0,1.95,,,
+P3_softplus_rate,softplus,0.0,0.1,28.316,36.481,0.047,18.93,5,0.556,-87.57,-87.57,-4.15,True,0.0,2.17,30.601,3.13,0.94
+P4_mono_softplus,softplus,1.0,0.1,28.334,36.576,0.042,18.97,5,0.556,-87.78,-87.78,-4.167,True,0.0,2.17,30.714,3.055,0.94

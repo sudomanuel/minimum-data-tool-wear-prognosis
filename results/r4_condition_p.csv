@@ -1,0 +1,11 @@
+m,p_source,MAE
+3,"fleet global (record cfg, sanity)",11.02
+3,condition kinematic zero-shot,12.96
+3,blend 0.5 fleet + 0.5 kinematic,11.44
+3,condition severity zero-shot,12.3
+3,blend 0.5 fleet + 0.5 severity,11.0
+4,"fleet global (record cfg, sanity)",5.63
+4,condition kinematic zero-shot,9.42
+4,blend 0.5 fleet + 0.5 kinematic,7.02
+4,condition severity zero-shot,8.52
+4,blend 0.5 fleet + 0.5 severity,6.89

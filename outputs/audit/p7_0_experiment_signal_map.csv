@@ -1,0 +1,13 @@
+experiment_id,physical_experiment_status,raw_signal_recorded,axial_files_count,rotational_files_count,expected_contacts,valid_contacts,missing_contacts,missing_reason,has_vb_target,has_vs_value,target_source_files,include_in_signal_modeling_candidate,include_in_trajectory_candidate,notes
+66,performed,True,7,7,6,6,,,True,True,vb_targets.csv;microscope_vs.csv,True,yes,
+67,performed,True,7,7,6,6,,,True,True,vb_targets.csv;microscope_vs.csv,True,yes,
+68,performed,True,7,7,6,6,,,True,True,vb_targets.csv;microscope_vs.csv,True,yes,
+69,performed,True,7,7,6,6,,,True,True,vb_targets.csv;microscope_vs.csv,True,yes,
+70,performed,True,7,7,6,6,,,True,True,vb_targets.csv;microscope_vs.csv,True,yes,
+71,performed,False,0,0,0,0,,acquisition_not_recorded,False,True,microscope_vs.csv,False,conditional_on_official_target,physically performed but signal acquisition was forgotten (lab clarification 2026-06-12)
+72,performed,False,0,0,0,0,,acquisition_not_recorded,False,True,microscope_vs.csv,False,conditional_on_official_target,physically performed but signal acquisition was forgotten (lab clarification 2026-06-12)
+73,performed,True,7,7,6,6,,,True,True,vb_targets.csv;microscope_vs.csv,True,yes,
+74,performed,True,7,7,6,6,,,True,True,vb_targets.csv;microscope_vs.csv,True,yes,
+75,performed,True,7,7,6,6,,,True,True,vb_targets.csv;microscope_vs.csv,True,yes,
+76,performed,True,7,7,6,6,,,True,True,vb_targets.csv;microscope_vs.csv,True,yes,
+77,performed,True,5,5,6,4,A77_p5;A77_p6;R77_p5;R77_p6,end_of_life_contacts_missing,True,True,vb_targets.csv;microscope_vs.csv,True,yes,end_of_life=1; contacts p5-p6 missing both axes

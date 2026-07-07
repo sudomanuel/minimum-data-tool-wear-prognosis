@@ -1,0 +1,81 @@
+{
+  "official_source": "data/targets/microscope_vb.csv",
+  "official_vb_range": [
+    103.0,
+    212.0
+  ],
+  "legacy_vb_range": [
+    85,
+    280
+  ],
+  "n_official_points": 12,
+  "time_aware": [
+    {
+      "baseline": "Linear(t)",
+      "trajectory": "official_12pt_physical",
+      "n": 12,
+      "loeo_mae": 4.086,
+      "loeo_max_err": 7.955,
+      "legacy_ref_mae": 9.93
+    },
+    {
+      "baseline": "Poly2(t)",
+      "trajectory": "official_12pt_physical",
+      "n": 12,
+      "loeo_mae": 3.804,
+      "loeo_max_err": 7.824,
+      "legacy_ref_mae": 4.96
+    },
+    {
+      "baseline": "Linear(t)",
+      "trajectory": "official_10pt_recorded_gapped",
+      "n": 10,
+      "loeo_mae": 3.101,
+      "loeo_max_err": 6.597,
+      "legacy_ref_mae": 9.93
+    },
+    {
+      "baseline": "Poly2(t)",
+      "trajectory": "official_10pt_recorded_gapped",
+      "n": 10,
+      "loeo_mae": 3.828,
+      "loeo_max_err": 6.477,
+      "legacy_ref_mae": 4.96
+    }
+  ],
+  "rul": [
+    {
+      "threshold_um": 220,
+      "official_max_vb": 212.0,
+      "t_failure": 13.7,
+      "rul_at_last_obs": 1.7,
+      "rul_extrapolated": true,
+      "legacy_t_failure_300": ""
+    },
+    {
+      "threshold_um": 250,
+      "official_max_vb": 212.0,
+      "t_failure": 19.78,
+      "rul_at_last_obs": 7.78,
+      "rul_extrapolated": true,
+      "legacy_t_failure_300": ""
+    },
+    {
+      "threshold_um": 300,
+      "official_max_vb": 212.0,
+      "t_failure": "no_crossing<=t24",
+      "rul_at_last_obs": "n/a",
+      "rul_extrapolated": true,
+      "legacy_t_failure_300": 10.77
+    },
+    {
+      "threshold_um": 600,
+      "official_max_vb": 212.0,
+      "t_failure": "no_crossing<=t24",
+      "rul_at_last_obs": "n/a",
+      "rul_extrapolated": true,
+      "legacy_t_failure_300": ""
+    }
+  ],
+  "all_rul_extrapolated": true
+}

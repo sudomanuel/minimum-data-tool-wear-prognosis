@@ -1,0 +1,33 @@
+# Official wear target configuration — locked by P7.3 (2026-06-13).
+# The official physical wear target is VB. The official full-trajectory source is
+# microscope_vb.csv (12 experiments, all performed cuts). The previous vb_targets.csv
+# is a legacy/model-ready subset used by the P1-P6 historical baseline runs.
+
+official_target:
+  name: VB
+  source: data/targets/microscope_vb.csv   # full physical VB trajectory (12 experiments)
+  column: VB_um                            # renamed from legacy "VS"/"VS_final_um"
+  status: confirmed
+  unit: micrometre
+  n_experiments: 12                        # 66-77 incl. 71-72 (target-only, no signals)
+  range_um: [103, 212]
+
+legacy_targets:
+  vb_targets_csv:
+    path: data/raw/targets/vb_targets.csv
+    status: legacy_model_ready_subset
+    used_by: P1-P6 historical baseline
+    n_experiments: 10                      # only experiments with recorded signals
+    range_um: [85, 280]
+    note: >
+      Different values from the official source (e.g., exp 77: 280 vs official 212).
+      Retained for reproducibility of P1-P6 only. Not the official VB trajectory after P7.3.
+  microscope_vs_legacy_csv:
+    path: data/targets/legacy/microscope_vs_legacy.csv
+    status: pre_rename_backup
+    note: verbatim backup of microscope_vb.csv before the VS->VB_um column cleanup.
+
+# Policy: P8+ pipelines MUST read the official source above. Re-running P1-P6 models on the
+# official target (re-baseline) is required before any final claim. Sensor-based models use
+# only experiments with recorded signals; trajectory/RUL may use the full 12-point VB sequence.
+rebaseline_required: true

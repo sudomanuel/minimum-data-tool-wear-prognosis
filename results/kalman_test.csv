@@ -1,0 +1,4 @@
+setting,MAE_um,cov_pct,width_um
+"CURRENT (physics+few-shot, offline m=3)",11.6,98,92
+KALMAN offline (forecast from m=3),12.2,87.0,621.0
+KALMAN online (1-step-ahead),3.5,-,-

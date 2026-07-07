@@ -1,0 +1,15 @@
+m,form,lam,MAE
+3,ARCHARD p=0.5 (fixed),-,11.97
+3,TAYLOR rate zero-shot (condition only),1.0,46.73
+3,TAYLOR rate blend λ=0.5,0.5,24.57
+3,TAYLOR rate blend λ=0.25,0.25,16.3
+3,USUI-proxy rate zero-shot (energy only),1.0,14.95
+3,USUI-proxy rate blend λ=0.5,0.5,9.62
+3,USUI-proxy rate blend λ=0.25,0.25,9.89
+4,ARCHARD p=0.5 (fixed),-,10.04
+4,TAYLOR rate zero-shot (condition only),1.0,42.9
+4,TAYLOR rate blend λ=0.5,0.5,22.95
+4,TAYLOR rate blend λ=0.25,0.25,15.32
+4,USUI-proxy rate zero-shot (energy only),1.0,12.93
+4,USUI-proxy rate blend λ=0.5,0.5,8.87
+4,USUI-proxy rate blend λ=0.25,0.25,8.6

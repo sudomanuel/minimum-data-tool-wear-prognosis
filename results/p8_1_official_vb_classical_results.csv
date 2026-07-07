@@ -1,0 +1,17 @@
+group,variant,model,n_features,MAE,RMSE,R2,monotonicity_violations,exp77_residual
+classical,A_current,Dummy(mean),202,38.0,41.527,-0.235,9,-60.67
+classical,A_current,Ridge,202,39.816,70.84,-2.593,4,-209.22
+classical,A_current,Lasso,202,25.045,39.076,-0.093,4,-109.4
+classical,A_current,ElasticNet,202,25.44,36.267,0.058,4,-96.21
+classical,A_current,SVR,202,46.117,48.894,-0.711,6,-67.09
+classical,A_current,RandomForest,202,30.434,36.116,0.066,5,-72.41
+classical,A_current,GradientBoosting,202,26.98,37.588,-0.011,5,-92.62
+classical,A_current,MLP(no physics),202,205.425,516.148,-189.722,3,1616.93
+classical,B_reliability_aware,Dummy(mean),199,38.0,41.527,-0.235,9,-60.67
+classical,B_reliability_aware,Ridge,199,38.864,67.962,-2.307,4,-199.39
+classical,B_reliability_aware,Lasso,199,25.045,39.076,-0.093,4,-109.4
+classical,B_reliability_aware,ElasticNet,199,23.662,31.642,0.283,4,-78.15
+classical,B_reliability_aware,SVR,199,46.182,48.949,-0.715,6,-67.26
+classical,B_reliability_aware,RandomForest,199,28.793,34.083,0.168,5,-68.22
+classical,B_reliability_aware,GradientBoosting,199,26.452,36.209,0.061,4,-85.71
+classical,B_reliability_aware,MLP(no physics),199,206.325,531.808,-201.471,4,1672.96

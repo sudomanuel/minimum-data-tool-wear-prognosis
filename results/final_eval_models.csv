@@ -1,0 +1,5 @@
+model,MAE_m3,R2_m3,MAE_m4,R2_m4
+Average-wear-curve (baseline),18.7,-1.31,20.8,-2.47
+Linear(t) self-fit,16.2,-6.8,12.5,-3.71
+Poly2(t) self-fit,142.1,-3843.68,62.1,-1045.14
+Physics Power(t) self-fit (ours),11.6,0.52,9.7,0.67

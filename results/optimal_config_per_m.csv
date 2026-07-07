@@ -1,0 +1,5 @@
+m,p_strategy,fit,lam,MAE,RMSE,mondrian_cov,mondrian_width,n,valid
+2,full,theil_sen,0.2,12.725,19.283,91.8,63.0,18,True
+3,full,siegel,0.0,11.256,15.952,90.9,51.6,18,True
+4,m_matched,theil_sen,0.0,9.124,11.909,89.7,48.6,18,True
+5,full,ols,0.0,17.395,19.002,93.7,63.5,3,True
