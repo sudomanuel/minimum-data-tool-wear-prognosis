@@ -105,7 +105,7 @@ the framework scales with replication. The external check validates the method's
    fleet-shape hybrid validated externally.
 2. A few tools run through a **gradual, densely sampled wear-out** — point-validates the safe-stop
    RUL and the tertiary annex.
-3. **Raw per-contact signal capture** — enables cyclostationary indicators for intermittent milling
+3. **Raw per-contact signal capture** — enables cyclostationary indicators for intermittent turning
    and the exploratory chipping-risk covariate's confirmatory test.
 4. Multi-mechanism degradation labels (notch, crater, thermal corrosion) and image-based wear
    quantification as independent research lines on the existing specimens.

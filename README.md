@@ -263,7 +263,8 @@ The obvious data-driven route — reading wear from vibration features — **doe
 tools** in this campaign. This is not asserted; it was given every fair chance and then settled with
 a deliberately handicapped duel:
 
-- **Fair chance:** compact physics indicators anchored at the tooth-passing frequency, break-in
+- **Fair chance:** compact wear-sensitive indicator families (RMS, signal/band energies, kurtosis,
+  crest factor, spectral-location frequencies), break-in
   normalisation, PLS with in-fold component selection, health-indicator quality gate. Best result:
   R² ≈ 0 (radial channel alone), MAE 35.5 µm — trendable *within* a tool (0.82) but with
   cross-tool prognosability of only **0.04**.
