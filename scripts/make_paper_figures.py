@@ -225,7 +225,54 @@ def fig_fair():
     save(fig, "paper_fair_baseline")
 
 
+def fig_pipeline():
+    """paper_pipeline.png — Figure 3: the two-branch prognostic pipeline (English, no in-figure
+    title, deployed record values). Replaces the bilingual deck chart pipeline_flow_full.png that
+    carried a stale R2=0.67 and internal-governance framing."""
+    from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+    fig, ax = plt.subplots(figsize=(11.4, 5.2))
+    ax.set_xlim(0, 114); ax.set_ylim(0, 52); ax.axis("off")
+
+    def box(x, y, w, h, text, fc, ec, fontsize=9.3, tc="#1a2a36"):
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.6",
+                                    fc=fc, ec=ec, lw=1.6))
+        ax.text(x + w / 2, y + h / 2, text, ha="center", va="center",
+                fontsize=fontsize, color=tc, fontweight="bold")
+
+    def arrow(x1, y1, x2, y2, color):
+        ax.add_patch(FancyArrowPatch((x1, y1), (x2, y2), arrowstyle="-|>",
+                                     mutation_scale=16, lw=1.8, color=color))
+
+    G, GF = "#1e7d4f", "#e8f5ee"     # physics branch
+    N, NF = "#5a6b7a", "#f1f4f6"     # sensor branch
+    R, RF = "#b03a2e", "#fdecea"     # null outcome
+    B, BF = "#1F5FA8", "#eaf1fa"     # data
+
+    box(1, 20, 15, 12, "Data\n18-tool DOE\nVB targets", BF, B)
+    # physics branch (top)
+    box(24, 34, 18, 10, "Physics law\nVB = b + a·t$^{p}$", GF, G)
+    box(46, 34, 18, 10, "Few-shot adapt\n(first m points)", GF, G)
+    box(68, 34, 18, 10, "VB → HI → RUL\n(chipping hazard)", GF, G)
+    box(90, 34, 21, 10, "Conformal band 90%\n+ Kalman monitor", GF, G)
+    ax.text(100.5, 47.5, "ADOPTED · pooled R² = 0.70 (m = 4)", ha="center",
+            fontsize=11, color=G, fontweight="bold")
+    # sensor branch (bottom)
+    box(24, 8, 18, 10, "Vibration features\n(294)", NF, N)
+    box(46, 8, 18, 10, "Select + augment\n(fold-safe)", NF, N)
+    box(68, 8, 18, 10, "ML / neural-net\nregression", NF, N)
+    box(90, 8, 21, 10, "No signal transfers\nR² < 0", RF, R, tc="#7c2d24")
+    ax.text(100.5, 4.2, "DOCUMENTED NULL", ha="center", fontsize=11,
+            color=R, fontweight="bold")
+    arrow(16.5, 29, 23.5, 39, G); arrow(42.5, 39, 45.5, 39, G)
+    arrow(64.5, 39, 67.5, 39, G); arrow(86.5, 39, 89.5, 39, G)
+    arrow(16.5, 23, 23.5, 13, N); arrow(42.5, 13, 45.5, 13, N)
+    arrow(64.5, 13, 67.5, 13, N); arrow(86.5, 13, 89.5, 13, N)
+    ax.text(57, 25.6, "identical leakage-safe leave-one-tool-out protocol for both branches",
+            ha="center", fontsize=10.5, color="#33454f", style="italic")
+    save(fig, "paper_pipeline")
+
+
 if __name__ == "__main__":
     fig_models(); fig_mcurve(); fig_ablation(); fig_breakdown()
-    fig_conformal(); fig_kalman(); fig_fair()
-    print("done — 7 paper figures + print twins")
+    fig_conformal(); fig_kalman(); fig_fair(); fig_pipeline()
+    print("done — 8 paper figures + print twins")
