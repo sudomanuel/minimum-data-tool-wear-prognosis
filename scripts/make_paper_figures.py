@@ -201,10 +201,12 @@ def fig_kalman():
     tr = d[d.tool_id != tt]; g = d[d.tool_id == tt].sort_values("order")
     o, v = g.order.to_numpy(float), g.vb.to_numpy(float)
     p = fit_global_p(tr)
-    preds = kf_online_onestep(tr, o, v, p)          # one-step predictions for cuts 2..n
+    preds = kf_online_onestep(tr, o, v, p)          # list of (pred, true, k) for cuts 2..n
+    arr = np.array([(pp, kk) for pp, _, kk in preds])
+    yhat, kk = arr[:, 0], arr[:, 1].astype(int)
     fig, ax = plt.subplots(figsize=(7.8, 4.5))
     ax.plot(o, v, "-o", color=GREY, lw=2.2, ms=8, label="measured VB")
-    ax.plot(o[1:len(preds) + 1], preds, "--s", color=GREEN, lw=2.2, ms=7,
+    ax.plot(o[kk], yhat, "--s", color=GREEN, lw=2.2, ms=7,
             label="Kalman one-step-ahead prediction")
     ax.set_xlabel("cut order", fontsize=12); ax.set_ylabel("flank wear VB (µm)", fontsize=12)
     ax.grid(alpha=0.3); ax.legend(fontsize=10.5, loc="upper left")
