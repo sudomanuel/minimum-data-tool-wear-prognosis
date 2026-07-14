@@ -1,0 +1,17 @@
+model,mode,MAE,R2
+"Physics fleet law alone (zero-shot, no sensors)",physics,44.87,-15.03
+Ridge (alpha=10),features only,56.6,-1.76
+LASSO (alpha=1),features only,49.49,-1.44
+"ElasticNet (alpha=1, l1=0.5)",features only,46.05,-0.77
+Random forest (200 trees),features only,40.6,-0.3
+"XGBoost (500 trees, lr=0.05)",features only,40.64,-0.4
+Ridge (alpha=10) + physics residual,hybrid resid,49.52,-12.44
+LASSO (alpha=1) + physics residual,hybrid resid,55.07,-14.62
+"ElasticNet (alpha=1, l1=0.5) + physics residual",hybrid resid,61.52,-14.63
+Random forest (200 trees) + physics residual,hybrid resid,57.2,-17.05
+"XGBoost (500 trees, lr=0.05) + physics residual",hybrid resid,57.08,-16.34
+Ridge (alpha=10) + tau feature,hybrid feat,46.1,-5.2
+LASSO (alpha=1) + tau feature,hybrid feat,51.96,-9.93
+"ElasticNet (alpha=1, l1=0.5) + tau feature",hybrid feat,45.37,-1.88
+Random forest (200 trees) + tau feature,hybrid feat,40.03,-0.27
+"XGBoost (500 trees, lr=0.05) + tau feature",hybrid feat,38.93,-0.29

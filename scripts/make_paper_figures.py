@@ -101,7 +101,7 @@ def fig_ablation():
     for i, v in enumerate(vals):
         ax1.text(v - 0.03, i, f"{v:.2f}", va="center", ha="right", fontsize=10)
     ax1.axvline(0, color="k", lw=1)
-    ax1.set_xlabel("pooled R² (LOTO) — all configurations < 0", fontsize=11.5)
+    ax1.set_xlabel("pooled R² (LOOCV) — all configurations < 0", fontsize=11.5)
     ax1.set_xlim(-2.05, 0.4); ax1.grid(axis="x", alpha=0.3); ax1.tick_params(labelsize=10.5)
     m = [2, 3, 4]; base = [13.8, 11.6, 9.7]
     ax2.plot(m, base, "-o", color=GREEN, lw=2.6, ms=10)
@@ -222,15 +222,15 @@ def fig_fair():
     for i, v in enumerate(d.R2[::-1]):
         ax.text(v - 0.04, i, f"{v:.2f}", va="center", ha="right", fontsize=10.5, color="#222")
     ax.axvline(0, color="k", lw=1.2)
-    ax.set_xlabel("out-of-sample R² (leave-one-tool-out) — 0 = population mean", fontsize=11.5)
+    ax.set_xlabel("out-of-sample R² (LOOCV) — 0 = population mean", fontsize=11.5)
     ax.set_xlim(-2.15, 0.45); ax.grid(axis="x", alpha=0.3); ax.tick_params(labelsize=10.5)
     save(fig, "paper_fair_baseline")
 
 
 def fig_pipeline():
-    """paper_pipeline.png — Figure 3: the two-branch prognostic pipeline (English, no in-figure
-    title, deployed record values). Replaces the bilingual deck chart pipeline_flow_full.png that
-    carried a stale R2=0.67 and internal-governance framing."""
+    """paper_pipeline.png — Figure 3: the two-branch prognostic pipeline. SCHEMATIC ONLY per the
+    supervisor's review (2026-07-14): no outcome numbers or verdict labels in the Methods figure —
+    branch outcomes belong to Section 4. Branch colours are identity, not verdict."""
     from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
     fig, ax = plt.subplots(figsize=(11.4, 5.2))
     ax.set_xlim(0, 114); ax.set_ylim(0, 52); ax.axis("off")
@@ -245,9 +245,8 @@ def fig_pipeline():
         ax.add_patch(FancyArrowPatch((x1, y1), (x2, y2), arrowstyle="-|>",
                                      mutation_scale=16, lw=1.8, color=color))
 
-    G, GF = "#1e7d4f", "#e8f5ee"     # physics branch
-    N, NF = "#5a6b7a", "#f1f4f6"     # sensor branch
-    R, RF = "#b03a2e", "#fdecea"     # null outcome
+    G, GF = "#1e7d4f", "#e8f5ee"     # physics branch (identity colour)
+    N, NF = "#5a6b7a", "#f1f4f6"     # sensor branch (identity colour)
     B, BF = "#1F5FA8", "#eaf1fa"     # data
 
     box(1, 20, 15, 12, "Data\n18-tool DOE\nVB targets", BF, B)
@@ -256,20 +255,20 @@ def fig_pipeline():
     box(46, 34, 18, 10, "Few-shot adapt\n(first m points)", GF, G)
     box(68, 34, 18, 10, "VB → HI → RUL\n(chipping hazard)", GF, G)
     box(90, 34, 21, 10, "Conformal band 90%\n+ Kalman monitor", GF, G)
-    ax.text(100.5, 47.5, "ADOPTED · pooled R² = 0.70 (m = 4)", ha="center",
-            fontsize=11, color=G, fontweight="bold")
+    ax.text(100.5, 47.5, "physics-integrated few-shot branch", ha="center",
+            fontsize=10.5, color=G, fontweight="bold")
     # sensor branch (bottom)
     box(24, 8, 18, 10, "Vibration features\n(294)", NF, N)
     box(46, 8, 18, 10, "Select + augment\n(fold-safe)", NF, N)
     box(68, 8, 18, 10, "ML / neural-net\nregression", NF, N)
-    box(90, 8, 21, 10, "No signal transfers\nR² < 0", RF, R, tc="#7c2d24")
-    ax.text(100.5, 4.2, "DOCUMENTED NULL", ha="center", fontsize=11,
-            color=R, fontweight="bold")
+    box(90, 8, 21, 10, "Cross-tool VB\nreading", NF, N)
+    ax.text(100.5, 4.2, "data-driven sensor branch", ha="center", fontsize=10.5,
+            color=N, fontweight="bold")
     arrow(16.5, 29, 23.5, 39, G); arrow(42.5, 39, 45.5, 39, G)
     arrow(64.5, 39, 67.5, 39, G); arrow(86.5, 39, 89.5, 39, G)
     arrow(16.5, 23, 23.5, 13, N); arrow(42.5, 13, 45.5, 13, N)
     arrow(64.5, 13, 67.5, 13, N); arrow(86.5, 13, 89.5, 13, N)
-    ax.text(57, 25.6, "identical leakage-safe leave-one-tool-out protocol for both branches",
+    ax.text(68, 25.8, "identical leakage-safe LOOCV protocol for both branches (Section 3.1)",
             ha="center", fontsize=10.5, color="#33454f", style="italic")
     save(fig, "paper_pipeline")
 
