@@ -51,8 +51,8 @@ def fig_models():
             ("Random Forest (naive)", 36.1, GREY),
             ("Average-wear-curve (baseline)", 18.7, RED),
             ("Linear(t) self-fit", 16.2, "#9AA8B5"),
-            ("Ours — conservative (m = 3)", 11.0, GREEN),
-            ("Ours — precise (m = 4)", 5.6, GREEN)]
+            ("Proposed physics model (m = 3)", 11.0, GREEN),
+            ("Proposed physics model (m = 4)", 5.6, GREEN)]
     fig, ax = plt.subplots(figsize=(8.6, 4.4))
     names = [r[0] for r in rows][::-1]
     vals = [r[1] for r in rows][::-1]
@@ -74,8 +74,8 @@ def fig_mcurve():
     opt = [12.7, 11.02, 5.63]                   # deployed optimum (records; nested-verified at m=4)
     fig, ax = plt.subplots(figsize=(7.6, 4.6))
     ax.axhline(18.7, ls=":", color=RED, lw=2, label="average-wear-curve baseline (18.7)")
-    ax.plot(m, base, "--o", color=GREY, lw=2.2, ms=9, label="base few-shot (Theil–Sen)")
-    ax.plot(m, opt, "-o", color=BLUE, lw=2.6, ms=10, label="joint-optimal (validity-constrained)")
+    ax.plot(m, base, "--o", color=GREY, lw=2.2, ms=9, label="proposed model, unweighted base fit")
+    ax.plot(m, opt, "-o", color=BLUE, lw=2.6, ms=10, label="proposed model, final configuration")
     for x, y in zip(m, base):
         ax.annotate(f"{y:.1f}", (x, y), textcoords="offset points", xytext=(0, 9),
                     ha="center", fontsize=10.5, color=GREY)
@@ -93,7 +93,8 @@ def fig_mcurve():
 def fig_ablation():
     sens = [("Full sensor/ML (A+R)", -1.75), ("− feature selection", -1.69),
             ("− augmentation", -1.77), ("− hyper-tuning", -1.31),
-            ("A-only", -1.68), ("R-only", -0.71), ("RandomForest", -0.58)]
+            ("axial channel only", -1.68), ("radial channel only", -0.71),
+            ("random forest instead of ridge", -0.58)]
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.6, 4.6),
                                    gridspec_kw=dict(width_ratios=[1.25, 1]))
     names = [s[0] for s in sens][::-1]; vals = [s[1] for s in sens][::-1]
@@ -121,7 +122,7 @@ def fig_breakdown():
     ax.plot(d.delta, d.theilsen_shift, "--o", color=RED, lw=2.4, ms=8,
             label="Theil–Sen alone (unbounded influence)")
     ax.plot(d.delta, d.hybrid_shift, "-o", color=BLUE, lw=2.4, ms=8,
-            label="with inert-by-default MAP guard")
+            label="with inert-by-default gross-error guard")
     ax.set_xlabel("injected outlier magnitude on one early measurement (µm)", fontsize=12)
     ax.set_ylabel("mean |shift| in predicted future VB (µm)", fontsize=12)
     ax.grid(alpha=0.3); ax.legend(fontsize=10.5, loc="upper left")
@@ -216,6 +217,13 @@ def fig_kalman():
 # ---------- Figure 12 · fair-baseline R2 bars (real CSV) ----------
 def fig_fair():
     d = pd.read_csv(os.path.join(ROOT, "results", "f2_fair_baseline.csv"))
+    # self-explanatory display names (supervisor rule: no labels a reader cannot parse w/o context)
+    disp = {"raw+Ridge (straw man)": "all 296 features + ridge",
+            "raw+RF (straw man)": "all 296 features + random forest",
+            "physics(abs)+PLS": "compact wear indicators + PLS",
+            "physics(rel-breakin)+PLS [FAIR]": "break-in-normalised indicators + PLS",
+            "fair + condition": "+ cutting-condition covariates"}
+    d = d.assign(model=d.model.map(lambda m: disp.get(m, m)))
     colors = [RED, RED, GREY, BLUE, GREY]
     fig, ax = plt.subplots(figsize=(8.4, 4.3))
     ax.barh(d.model[::-1], d.R2[::-1], color=colors[::-1], alpha=0.9)
