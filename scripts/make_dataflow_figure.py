@@ -1,16 +1,25 @@
 # -*- coding: utf-8 -*-
-"""make_dataflow_figure.py — v2 BUSINESS-GRADE, highly detailed end-to-end data-flow map.
+"""make_dataflow_figure.py — v3 CIRCUIT-STYLE, highly detailed end-to-end data-flow map.
 
-Structure (per the graphify pipeline skeleton, enriched with every real artifact/number):
-  OBJECTIVE banner -> numbered phase rail -> swimlaned flow with per-edge data payloads and
-  the LOOCV wall -> PAYOFF KPI ribbon.  The deployed route is the emphasized "golden path".
-EN + ES editions, 300 dpi, full-bleed axes (matplotlib default margins were the v2.0 bug).
+v3 changes (supervisor/user review):
+  * ORTHOGONAL (Manhattan) connectors only — no curved arcs.
+  * NO connector may touch or graze a box it does not connect to: routes run in dedicated
+    corridors and a validator asserts >= CLEAR units of clearance against every other box.
+  * Crossings are disambiguated like an electrical schematic:
+      - a HOP (semicircular jump) where two nets merely cross without connecting;
+      - a filled JUNCTION DOT where lines of the same net genuinely join.
+
+Content source of truth: graphify pipeline skeleton + real artifacts/numbers of the study.
+EN + ES editions, 300 dpi, full-bleed axes.
 """
 import os
+from collections import defaultdict
+import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Rectangle
+from matplotlib.patches import FancyBboxPatch, Rectangle
+from matplotlib.lines import Line2D
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 FIG = os.path.join(ROOT, "outputs", "figures")
@@ -24,6 +33,9 @@ TEAL = "#0E7490"; TEAL_BG = "#E9F5F8"
 RED = "#B03A2E"; RED_BG = "#FDF0EE"
 PUR = "#5B21B6"; PUR_BG = "#F4EFFC"
 GOLD = "#B7791F"
+
+CLEAR = 1.4      # minimum clearance (canvas units) between a connector and a foreign box
+HOP_R = 1.25     # hop radius
 
 T = {
  "EN": dict(
@@ -68,10 +80,11 @@ T = {
    lane_s="SENSOR BRANCH — the obvious route, given every chance",
    lane_p="PHYSICS BRANCH — the deployed route",
    e_sig="vibration", e_vb="VB values", e_burst="6 bursts/cycle", e_feats="294 feats/cut",
-   e_rows="172 × 296", e_curves="17 training\nVB curves", e_m="first m = 3–4\nreadings",
+   e_rows="172 × 296", e_curves="17 training VB curves", e_m="first m = 3–4 readings",
    e_ba="(b, a)", e_curve="VB(t)", e_band="curve + band", e_risk="h(VB)",
-   e_events="18 chipping events", e_null="no transferable signal",
+   e_events="18 chipping events", e_null="no transferable signal", e_alarm="alarm",
    e_kurt="radial spectral kurtosis →\nexploratory risk covariate (p = 0.010)",
+   legend_hop="lines cross (not connected)", legend_dot="lines join (same data)",
  ),
  "ES": dict(
    objective_tag="OBJETIVO",
@@ -115,142 +128,277 @@ T = {
    lane_s="RAMA DE SENSORES — la ruta obvia, con todas las oportunidades",
    lane_p="RAMA FÍSICA — la ruta desplegada",
    e_sig="vibración", e_vb="valores VB", e_burst="6 ráfagas/ciclo", e_feats="294 caract./corte",
-   e_rows="172 × 296", e_curves="17 curvas VB de\nentrenamiento", e_m="primeras m = 3–4\nlecturas",
+   e_rows="172 × 296", e_curves="17 curvas VB de entren.", e_m="primeras m = 3–4 lecturas",
    e_ba="(b, a)", e_curve="VB(t)", e_band="curva + banda", e_risk="h(VB)",
-   e_events="18 eventos de astillado", e_null="sin señal transferible",
+   e_events="18 eventos de astillado", e_null="sin señal transferible", e_alarm="alarma",
    e_kurt="curtosis espectral radial →\ncovariable exploratoria (p = 0.010)",
+   legend_hop="las líneas se cruzan (no conectan)", legend_dot="las líneas se unen (mismo dato)",
  ),
 }
+
+
+# ============================ orthogonal router ============================
+class Router:
+    """Manhattan connectors with schematic hops at crossings and junction dots."""
+
+    def __init__(self):
+        self.nets = []      # dict(pts, color, lw, dashed, arrow, skip)
+        self.dots = []      # (x, y, color)
+        self._hop_pts = []
+
+    def add(self, pts, color=GREY_LN, lw=1.7, dashed=False, arrow=True, skip=()):
+        # enforce strict orthogonality
+        for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+            assert abs(x1 - x0) < 1e-9 or abs(y1 - y0) < 1e-9, f"non-orthogonal segment {pts}"
+        self.nets.append(dict(pts=[tuple(map(float, p)) for p in pts], color=color, lw=lw,
+                              dashed=dashed, arrow=arrow, skip=set(skip)))
+
+    def dot(self, x, y, color=GREY_LN):
+        self.dots.append((x, y, color))
+
+    # ---------- validation: no connector may graze a foreign box ----------
+    def validate(self, boxes):
+        bad = []
+        for net in self.nets:
+            for (x0, y0), (x1, y1) in zip(net["pts"], net["pts"][1:]):
+                sx0, sx1 = sorted((x0, x1)); sy0, sy1 = sorted((y0, y1))
+                for name, (bx, by, bw, bh) in boxes.items():
+                    if name in net["skip"]:
+                        continue
+                    # inflate the box by CLEAR and test overlap with the segment's bbox
+                    ix0, ix1 = bx - CLEAR, bx + bw + CLEAR
+                    iy0, iy1 = by - CLEAR, by + bh + CLEAR
+                    if sx0 < ix1 and sx1 > ix0 and sy0 < iy1 and sy1 > iy0:
+                        bad.append((name, (x0, y0), (x1, y1)))
+        return bad
+
+    # ---------- crossing detection ----------
+    def _crossings(self):
+        segs = []
+        for ni, net in enumerate(self.nets):
+            for p0, p1 in zip(net["pts"], net["pts"][1:]):
+                segs.append((ni, p0, p1, abs(p1[1] - p0[1]) < 1e-9))
+        hops = defaultdict(list)          # (net, seg_idx_within_net) -> [x of crossing]
+        idx_in_net = defaultdict(int)
+        keyed = []
+        for ni, p0, p1, horiz in segs:
+            keyed.append((ni, idx_in_net[ni], p0, p1, horiz))
+            idx_in_net[ni] += 1
+        for ni, si, p0, p1, horiz in keyed:
+            if not horiz:
+                continue
+            hy = p0[1]; hx0, hx1 = sorted((p0[0], p1[0]))
+            for nj, sj, q0, q1, vhoriz in keyed:
+                if vhoriz or nj == ni:
+                    continue
+                vx = q0[0]; vy0, vy1 = sorted((q0[1], q1[1]))
+                if hx0 + HOP_R < vx < hx1 - HOP_R and vy0 + 0.4 < hy < vy1 - 0.4:
+                    hops[(ni, si)].append(vx)
+                    self._hop_pts.append((vx, hy))
+        return hops
+
+    # ---------- drawing ----------
+    def draw(self, ax):
+        hops = self._crossings()
+        n_hops = 0
+        for ni, net in enumerate(self.nets):
+            ls = (0, (5, 3)) if net["dashed"] else "solid"
+            pts = net["pts"]
+            for si, (p0, p1) in enumerate(zip(pts, pts[1:])):
+                horiz = abs(p1[1] - p0[1]) < 1e-9
+                xs = hops.get((ni, si), [])
+                last = si == len(pts) - 2
+                if horiz and xs:
+                    n_hops += len(xs)
+                    y = p0[1]
+                    going_right = p1[0] > p0[0]
+                    order = sorted(xs) if going_right else sorted(xs, reverse=True)
+                    cur = p0[0]
+                    for cx in order:
+                        a = cx - HOP_R if going_right else cx + HOP_R
+                        ax.add_line(Line2D([cur, a], [y, y], color=net["color"],
+                                           lw=net["lw"], ls=ls, zorder=2,
+                                           solid_capstyle="round"))
+                        th = np.linspace(np.pi, 0, 40) if going_right else np.linspace(0, np.pi, 40)
+                        ax.add_line(Line2D(cx + HOP_R * np.cos(th), y + HOP_R * np.sin(th),
+                                           color=net["color"], lw=net["lw"], zorder=2))
+                        cur = cx + HOP_R if going_right else cx - HOP_R
+                    ax.add_line(Line2D([cur, p1[0]], [y, y], color=net["color"], lw=net["lw"],
+                                       ls=ls, zorder=2, solid_capstyle="round"))
+                else:
+                    ax.add_line(Line2D([p0[0], p1[0]], [p0[1], p1[1]], color=net["color"],
+                                       lw=net["lw"], ls=ls, zorder=2, solid_capstyle="round"))
+                if last and net["arrow"]:
+                    dx, dy = p1[0] - p0[0], p1[1] - p0[1]
+                    n = max(abs(dx), abs(dy))
+                    ux, uy = (dx / n, dy / n) if n else (1, 0)
+                    ax.annotate("", xy=p1, xytext=(p1[0] - ux * 1.6, p1[1] - uy * 1.6),
+                                arrowprops=dict(arrowstyle="-|>", color=net["color"],
+                                                lw=net["lw"], shrinkA=0, shrinkB=0,
+                                                mutation_scale=13), zorder=5)
+        for x, y, c in self.dots:
+            ax.plot([x], [y], marker="o", ms=5.4, color=c, zorder=6,
+                    markeredgecolor="white", markeredgewidth=0.8)
+        return n_hops
 
 
 def make(lang):
     L = T[lang]
     fig, ax = plt.subplots(figsize=(24, 12.8))
-    fig.subplots_adjust(left=0.005, right=0.995, top=0.995, bottom=0.005)
+    fig.subplots_adjust(left=0.004, right=0.996, top=0.996, bottom=0.004)
     ax.set_xlim(0, 240); ax.set_ylim(0, 128); ax.axis("off")
 
-    def box(x, y, w, h, text, fc, ec, fs=8.2, tc=INK, lw=1.5, bold=True, mono=False):
-        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.35",
+    B = {}   # name -> (x, y, w, h)
+
+    def box(name, x, y, w, h, text, fc, ec, fs=8.2, tc=INK, lw=1.5, mono=False):
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.3",
                                     fc=fc, ec=ec, lw=lw, zorder=3))
         ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", fontsize=fs,
-                color=tc, fontweight="bold" if bold else "normal", zorder=4, linespacing=1.32,
+                color=tc, fontweight="bold", zorder=4, linespacing=1.32,
                 family="monospace" if mono else None)
-        return (x, y, w, h)
+        B[name] = (x, y, w, h)
 
-    def arrow(a, b, color=GREY_LN, label=None, lx=0, ly=0, lw=1.6, con="arc3,rad=0.0",
-              fs=7.0, dashed=False):
-        ax.add_patch(FancyArrowPatch(a, b, arrowstyle="-|>", mutation_scale=13, lw=lw,
-                                     color=color, zorder=2, connectionstyle=con,
-                                     linestyle=(0, (5, 3)) if dashed else "solid"))
-        if label:
-            ax.text((a[0]+b[0])/2 + lx, (a[1]+b[1])/2 + ly, label, ha="center", va="center",
-                    fontsize=fs, style="italic", color="#43555f", zorder=6,
-                    bbox=dict(fc="white", ec="none", alpha=0.9, pad=0.6))
+    def lbl(x, y, text, fs=7.0, color="#43555f", ha="center"):
+        ax.text(x, y, text, ha=ha, va="center", fontsize=fs, style="italic", color=color,
+                zorder=7, bbox=dict(fc="white", ec="none", alpha=0.94, pad=0.7))
 
-    def R(b):  return (b[0]+b[2]+0.5, b[1]+b[3]/2)
-    def Lm(b): return (b[0]-0.5, b[1]+b[3]/2)
-    def Tm(b): return (b[0]+b[2]/2, b[1]+b[3]+0.5)
-    def Bm(b): return (b[0]+b[2]/2, b[1]-0.5)
-
-    # ======== OBJECTIVE banner ========
+    # ---------------- banner / rail / lanes ----------------
     ax.add_patch(Rectangle((1.5, 118.5), 237, 8.4, fc=NAVY, ec="none", zorder=3))
     ax.text(4.5, 122.7, L["objective_tag"], ha="left", va="center", fontsize=13,
             color="#9FB4E8", fontweight="bold", zorder=4)
     ax.text(29, 122.7, L["objective"], ha="left", va="center", fontsize=10.6, color="white",
             fontweight="bold", zorder=4, linespacing=1.5)
-
-    # ======== phase rail ========
-    spans = [(1.5, 55), (58.5, 81.5), (91.5, 152), (157, 187), (191.5, 238.5)]
-    for (x0, x1), (num, name) in zip(spans, L["phases"]):
+    for (x0, x1), (num, name) in zip([(1.5, 56), (60, 84), (92, 152), (156, 190), (194, 238.5)],
+                                     L["phases"]):
         ax.plot([x0, x1], [114.6, 114.6], color=NAVY, lw=1.1, zorder=3)
         ax.text(x0, 116.2, num, fontsize=10, color=GOLD, fontweight="bold", zorder=4)
         ax.text(x0 + 4.5, 116.2, name, fontsize=9, color=NAVY, fontweight="bold", zorder=4)
+    ax.add_patch(Rectangle((92, 76), 146.5, 32, fc=GREY_BG, ec="none", alpha=0.5, zorder=0))
+    ax.add_patch(Rectangle((92, 16), 146.5, 56, fc=EMER_BG, ec="none", alpha=0.32, zorder=0))
+    ax.text(237, 110.4, L["lane_s"], ha="right", fontsize=8.6, color=SLATE, fontweight="bold")
+    ax.text(237, 17.6, L["lane_p"], ha="right", fontsize=8.6, color=EMER, fontweight="bold")
 
-    # ======== lane tints + titles ========
-    ax.add_patch(Rectangle((89, 74.5), 150.5, 34, fc=GREY_BG, ec="none", alpha=0.55, zorder=0))
-    ax.add_patch(Rectangle((89, 15.5), 150.5, 55, fc=EMER_BG, ec="none", alpha=0.35, zorder=0))
-    ax.text(238, 110.5, L["lane_s"], ha="right", fontsize=8.6, color=SLATE,
-            fontweight="bold", zorder=4)
-    ax.text(238, 16.8, L["lane_p"], ha="right", fontsize=8.6, color=EMER,
-            fontweight="bold", zorder=4)
+    # ---------------- boxes ----------------
+    box("a1", 2, 88, 26, 16, L["a1"], BLUE_BG, BLUE, fs=7.4)
+    box("a2", 2, 66, 26, 13, L["a2"], BLUE_BG, BLUE, fs=7.4)
+    box("a3", 2, 24.5, 26, 13, L["a3"], BLUE_BG, BLUE, fs=7.4)
+    box("b1", 36, 70, 20, 13, L["b1"], TEAL_BG, TEAL, fs=7.4)
+    box("b2", 36, 24, 20, 14, L["b2"], TEAL_BG, TEAL, fs=7.3)
+    box("c1", 62, 92, 21, 10, L["c1"], TEAL_BG, TEAL, fs=7.3)
+    box("c2", 62, 62, 21, 22, L["c2"], TEAL_BG, TEAL, fs=7.3)
+    box("c3", 62, 36, 21, 11, L["c3"], "white", TEAL, fs=7.4, mono=True)
 
-    # ======== left half ========
-    a1 = box(1.5, 92, 27, 17, L["a1"], BLUE_BG, BLUE, fs=7.4)
-    a2 = box(1.5, 66, 27, 13, L["a2"], BLUE_BG, BLUE, fs=7.4)
-    a3 = box(1.5, 27, 27, 12, L["a3"], BLUE_BG, BLUE, fs=7.4)
-    b1 = box(33.5, 70, 21, 13, L["b1"], TEAL_BG, TEAL, fs=7.4)
-    b2 = box(33.5, 25, 21, 14, L["b2"], TEAL_BG, TEAL, fs=7.3)
-    c1 = box(59.5, 94, 22, 10, L["c1"], TEAL_BG, TEAL, fs=7.3)
-    c2 = box(59.5, 62, 22, 24, L["c2"], TEAL_BG, TEAL, fs=7.3)
-    c3 = box(59.5, 38, 22, 11, L["c3"], "white", TEAL, fs=7.4, mono=True)
+    box("cur", 94, 96, 18, 9, L["cur"], "white", GREY_LN, fs=7.2)
+    box("s1", 116, 96, 18, 9, L["s1"], "white", GREY_LN, fs=7.2)
+    box("s2", 138, 96, 15, 9, L["s2"], "white", GREY_LN, fs=7.2)
+    box("s3", 157, 96, 13, 9, L["s3"], "white", GREY_LN, fs=7.2)
+    box("s4", 174, 96, 16, 9, L["s4"], "white", GREY_LN, fs=7.2)
+    box("s5", 94, 80, 96, 11, L["s5"], "white", GREY_LN, fs=7.8)
+    box("sout", 196, 80, 42, 25, L["sout"], RED_BG, RED, fs=8.2, tc="#7c2d24", lw=2.0)
 
-    # ======== the wall ========
-    ax.plot([86.5, 86.5], [4, 108], ls=(0, (6, 3)), color=RED, lw=2.8, zorder=1)
-    ax.text(84.6, 22, L["wall"], ha="center", va="center", fontsize=10, color=RED,
+    box("p1", 94, 52, 26, 13, L["p1"], EMER_BG, EMER, fs=7.5)
+    box("p2", 94, 31, 26, 16, L["p2"], EMER_BG, EMER, fs=7.5, lw=2.4)
+    box("p3", 126, 38, 26, 15, L["p3"], EMER_BG, EMER, fs=7.5, lw=2.4)
+    box("k1", 158, 50, 28, 16, L["k1"], PUR_BG, PUR, fs=7.4, lw=2.2)
+    box("k2", 158, 22, 28, 16, L["k2"], PUR_BG, PUR, fs=7.4)
+    box("doe", 126, 20, 26, 9, L["doe"], "white", GREY_LN, fs=6.9)
+    box("d3", 196, 60, 42, 11, L["d3"], EMER_BG, EMER, fs=7.7)
+    box("d1", 196, 44, 42, 12, L["d1"], BLUE_BG, NAVY, fs=7.7, lw=2.2)
+    box("d2", 196, 22, 42, 16, L["d2"], NAVY, NAVY, fs=8.4, tc="white", lw=2.4)
+
+    # ---------------- LOOCV wall ----------------
+    ax.plot([88, 88], [16, 110], ls=(0, (6, 3)), color=RED, lw=2.8, zorder=1)
+    ax.text(86.2, 80, L["wall"], ha="center", va="center", fontsize=10, color=RED,
             fontweight="bold", zorder=6, rotation=90,
             bbox=dict(fc="white", ec=RED, lw=1.0, pad=2.0))
-    ax.text(86.5, 113.4, L["wallsub"], ha="center", va="top", fontsize=6.6, color=RED,
+    ax.text(88, 113.4, L["wallsub"], ha="center", va="top", fontsize=6.6, color=RED,
             style="italic", linespacing=1.4, zorder=6,
             bbox=dict(fc="white", ec="none", alpha=0.94, pad=1.2))
 
-    # ======== sensor lane ========
-    cur = box(91.5, 98, 17, 7.5, L["cur"], "white", GREY_LN, fs=7.2)
-    s1 = box(112, 98, 19, 7.5, L["s1"], "white", GREY_LN, fs=7.2)
-    s2 = box(134.5, 98, 15.5, 7.5, L["s2"], "white", GREY_LN, fs=7.2)
-    s3 = box(153.5, 98, 12.5, 7.5, L["s3"], "white", GREY_LN, fs=7.2)
-    s4 = box(169.5, 98, 17.5, 7.5, L["s4"], "white", GREY_LN, fs=7.2)
-    s5 = box(91.5, 80, 95.5, 12, L["s5"], "white", GREY_LN, fs=7.8)
-    so = box(191.5, 80, 47, 25.5, L["sout"], RED_BG, RED, fs=8.2, tc="#7c2d24", lw=2.0)
-    arrow(R(cur), Lm(s1)); arrow(R(s1), Lm(s2)); arrow(R(s2), Lm(s3)); arrow(R(s3), Lm(s4))
-    arrow(Bm(s4), (178.25, 92.5))
-    arrow(R(s5), Lm(so), GREY_LN, L["e_null"], lx=-5, ly=3.2, con="arc3,rad=-0.15", fs=6.8)
+    # ---------------- connectors ----------------
+    r = Router()
+    # acquisition -> raw stores (a1 + a2 join at a junction dot)
+    r.add([(28, 96), (32, 96), (32, 76.5), (36, 76.5)], BLUE, skip={"a1", "b1"})
+    r.add([(28, 72.5), (32, 72.5), (32, 76.5)], BLUE, arrow=False, skip={"a2", "b1"})
+    r.dot(32, 76.5, BLUE)
+    r.add([(28, 31), (36, 31)], BLUE, skip={"a3", "b2"})
+    # raw -> preparation
+    r.add([(56, 76.5), (59, 76.5), (59, 97), (62, 97)], TEAL, skip={"b1", "c1"})
+    r.add([(72.5, 92), (72.5, 84)], TEAL, skip={"c1", "c2"})
+    r.add([(72.5, 62), (72.5, 47)], TEAL, skip={"c2", "c3"})
+    r.add([(56, 31), (59, 31), (59, 41.5), (62, 41.5)], TEAL, skip={"b2", "c3"})
+    # across the LOOCV wall: three pins out of the feature table
+    r.add([(83, 46), (91.5, 46), (91.5, 100.5), (94, 100.5)], GREY_LN, skip={"c3", "cur"})
+    r.add([(83, 44), (89.5, 44), (89.5, 58.5), (94, 58.5)], EMER, lw=2.4, skip={"c3", "p1"})
+    r.add([(83, 39), (94, 39)], EMER, lw=3.0, skip={"c3", "p2"})
+    # sensor lane chain
+    r.add([(112, 100.5), (116, 100.5)], GREY_LN, skip={"cur", "s1"})
+    r.add([(134, 100.5), (138, 100.5)], GREY_LN, skip={"s1", "s2"})
+    r.add([(153, 100.5), (157, 100.5)], GREY_LN, skip={"s2", "s3"})
+    r.add([(170, 100.5), (174, 100.5)], GREY_LN, skip={"s3", "s4"})
+    r.add([(182, 96), (182, 91)], GREY_LN, skip={"s4", "s5"})
+    r.add([(190, 85.5), (196, 85.5)], GREY_LN, skip={"s5", "sout"})
+    # physics golden path
+    r.add([(107, 52), (107, 47)], EMER, lw=2.4, skip={"p1", "p2"})
+    r.add([(120, 39), (123, 39), (123, 45.5), (126, 45.5)], EMER, lw=3.0, skip={"p2", "p3"})
+    r.add([(152, 45.5), (155, 45.5), (155, 58), (158, 58)], EMER, lw=3.0, skip={"p3", "k1"})
+    # conformal fan-out (junction dot) -> online monitor + RUL window
+    r.add([(186, 58), (189, 58), (189, 65.5), (196, 65.5)], EMER, lw=2.2, skip={"k1", "d3"})
+    r.add([(189, 58), (189, 50), (196, 50)], EMER, lw=3.0, skip={"k1", "d1"})
+    r.dot(189, 58, EMER)
+    # chipping events trunk (runs in the free corridor below everything)
+    r.add([(46, 24), (46, 18), (172, 18), (172, 22)], PUR, skip={"b2", "k2"})
+    r.add([(152, 24.5), (158, 24.5)], GREY_LN, lw=1.2, skip={"doe", "k2"})
+    r.add([(186, 30), (196, 30)], PUR, lw=2.0, skip={"k2", "d2"})
+    # decision column
+    r.add([(228, 60), (228, 56)], EMER, lw=1.8, skip={"d3", "d1"})
+    r.add([(216, 44), (216, 38)], NAVY, lw=2.8, skip={"d1", "d2"})
+    # exploratory covariate (dashed) — crosses the two conformal branches -> hops
+    r.add([(205, 80), (205, 75), (192, 75), (192, 34), (186, 34)], RED, lw=1.5, dashed=True,
+          skip={"sout", "k2"})
 
-    # ======== physics lane (golden path) ========
-    p1 = box(91.5, 52, 27, 13, L["p1"], EMER_BG, EMER, fs=7.5)
-    p2 = box(91.5, 27, 27, 16, L["p2"], EMER_BG, EMER, fs=7.5, lw=2.4)
-    p3 = box(124, 37, 27, 15, L["p3"], EMER_BG, EMER, fs=7.5, lw=2.4)
-    k1 = box(157, 49, 28, 16, L["k1"], PUR_BG, PUR, fs=7.4, lw=2.2)
-    k2 = box(157, 21, 28, 16, L["k2"], PUR_BG, PUR, fs=7.4)
-    doe = box(124, 21, 27, 9, L["doe"], "white", GREY_LN, fs=6.9)
-    d3 = box(191.5, 59, 47, 11, L["d3"], EMER_BG, EMER, fs=7.7)
-    d1 = box(191.5, 42, 47, 12, L["d1"], BLUE_BG, NAVY, fs=7.7, lw=2.2)
-    d2 = box(191.5, 20, 47, 17, L["d2"], NAVY, NAVY, fs=8.4, tc="white", lw=2.4)
+    bad = r.validate(B)
+    if bad:
+        for name, p0, p1 in bad:
+            print(f"  !! clearance violation: box {name} vs segment {p0}->{p1}")
+    n_hops = r.draw(ax)
 
-    # ======== edges: left half ========
-    arrow(R(a1), Lm(b1), BLUE)
-    arrow(R(a2), Lm(b1), BLUE, L["e_sig"], lx=-0.6, ly=-2.2)
-    arrow(R(a3), Lm(b2), BLUE, L["e_vb"], ly=2.0)
-    arrow(R(b1), Lm(c1), TEAL, L["e_burst"], lx=0.8, ly=2.8)
-    arrow(Bm(c1), Tm(c2), TEAL)
-    arrow(Bm(c2), Tm(c3), TEAL, L["e_feats"], lx=9.2, ly=0.3)
-    arrow(R(b2), (58.9, 41.5), TEAL, L["e_vb"], ly=-2.4)
+    # ---------------- edge labels (placed in free corridors) ----------------
+    lbl(31.6, 84.5, L["e_sig"], ha="left")
+    lbl(32, 28.4, L["e_vb"])
+    lbl(59.4, 87, L["e_burst"], ha="left")
+    lbl(74.6, 55, L["e_feats"], ha="left")
+    lbl(59.6, 36.4, L["e_vb"], ha="left")
+    lbl(94.5, 93.5, L["e_rows"], ha="left")
+    lbl(96.5, 69, L["e_curves"], ha="left")
+    lbl(96.5, 25.5, L["e_m"], ha="left")
+    lbl(121.6, 42.6, L["e_ba"], ha="left")
+    lbl(154, 41.4, L["e_curve"])
+    lbl(191.4, 53.4, L["e_band"], ha="left")
+    lbl(190, 30, L["e_risk"])
+    lbl(105, 19.6, L["e_events"], ha="left")
+    lbl(193, 88, L["e_null"])
+    lbl(229.6, 58, L["e_alarm"], ha="left")
+    ax.text(190.5, 76.5, L["e_kurt"], ha="right", fontsize=6.6, style="italic", color=RED,
+            zorder=7, bbox=dict(fc="white", ec=RED, lw=0.5, alpha=0.95, pad=1.0))
 
-    # ======== across the wall ========
-    arrow(R(c3), Lm(cur), GREY_LN, L["e_rows"], lx=-4.6, ly=4.2, con="arc3,rad=0.42")
-    arrow((R(c3)[0], 42.5), Lm(p1), EMER, L["e_curves"], lx=-1.4, ly=-3.6,
-          con="arc3,rad=-0.12", lw=2.4)
-    arrow((R(c3)[0], 40.0), Lm(p2), EMER, L["e_m"], lx=-3.4, ly=-3.8,
-          con="arc3,rad=-0.2", lw=3.0)
-    arrow((86.5, 8.5), (156.4, 26.0), PUR, L["e_events"], lx=-16, ly=3.2, con="arc3,rad=0.1")
+    # ---------------- schematic legend ----------------
+    lx, ly = 3, 109.5
+    ax.add_line(Line2D([lx, lx + 3.4], [ly, ly], color=SLATE, lw=1.7, zorder=4))
+    th = np.linspace(np.pi, 0, 40)
+    ax.add_line(Line2D(lx + 4.6 + HOP_R * np.cos(th), ly + HOP_R * np.sin(th), color=SLATE,
+                       lw=1.7, zorder=4))
+    ax.add_line(Line2D([lx + 5.85, lx + 9.2], [ly, ly], color=SLATE, lw=1.7, zorder=4))
+    ax.add_line(Line2D([lx + 4.6, lx + 4.6], [ly - 2.6, ly + 2.6], color=SLATE, lw=1.7, zorder=3))
+    ax.text(lx + 10.4, ly, L["legend_hop"], fontsize=7.2, va="center", color=SLATE, style="italic")
+    jx = lx + 46
+    ax.add_line(Line2D([jx, jx + 9.2], [ly, ly], color=SLATE, lw=1.7, zorder=4))
+    ax.add_line(Line2D([jx + 4.6, jx + 4.6], [ly, ly + 2.6], color=SLATE, lw=1.7, zorder=4))
+    ax.plot([jx + 4.6], [ly], marker="o", ms=5.4, color=SLATE, zorder=5,
+            markeredgecolor="white", markeredgewidth=0.8)
+    ax.text(jx + 10.4, ly, L["legend_dot"], fontsize=7.2, va="center", color=SLATE, style="italic")
 
-    # ======== physics golden path ========
-    arrow(Bm(p1), Tm(p2), EMER, lw=2.4)
-    arrow(R(p2), Lm(p3), EMER, L["e_ba"], ly=2.2, lw=3.0)
-    arrow(R(p3), Lm(k1), EMER, L["e_curve"], lx=0.4, ly=-3.0, con="arc3,rad=-0.1", lw=3.0)
-    arrow(R(k1), Lm(d1), EMER, L["e_band"], lx=0.4, ly=-2.8, con="arc3,rad=0.08", lw=3.0,
-          fs=6.8)
-    arrow(Tm(k1), Lm(d3), EMER, None, con="arc3,rad=-0.18", lw=1.7)
-    arrow(R(k2), Lm(d2), PUR, L["e_risk"], lx=-1.2, ly=-2.6, fs=6.8, lw=2.0)
-    arrow(R(doe), Lm(k2), GREY_LN, None, con="arc3,rad=0.15", lw=1.2)
-    arrow(Bm(d1), Tm(d2), NAVY, lw=2.8)
-    arrow(Bm(d3), (216.0, 54.5), EMER, lw=1.6)
-
-    # exploratory covariate (dashed) through the inter-column corridor
-    arrow((191.0, 79.4), (185.6, 33.5), RED, None, con="arc3,rad=-0.12", dashed=True, lw=1.5)
-    ax.text(188.8, 74.0, L["e_kurt"], ha="right", fontsize=6.6, style="italic", color=RED,
-            zorder=6, bbox=dict(fc="white", ec=RED, lw=0.5, alpha=0.94, pad=1.0))
-
-    # ======== PAYOFF ribbon ========
+    # ---------------- payoff ribbon ----------------
     ax.add_patch(Rectangle((1.5, 1.5), 237, 12, fc="white", ec=NAVY, lw=1.4, zorder=3))
     ax.text(4.5, 7.5, L["payoff_tag"], ha="left", va="center", fontsize=11, color=NAVY,
             fontweight="bold", zorder=4)
@@ -262,10 +410,9 @@ def make(lang):
                 linespacing=1.3)
         x0 += 42
 
-    fig.savefig(os.path.join(FIG, f"dataflow_detailed_{lang}.png"), dpi=300,
-                facecolor="white")
+    fig.savefig(os.path.join(FIG, f"dataflow_detailed_{lang}.png"), dpi=300, facecolor="white")
     plt.close(fig)
-    print("wrote", f"dataflow_detailed_{lang}.png")
+    print(f"wrote dataflow_detailed_{lang}.png | clearance violations: {len(bad)} | hops: {n_hops}")
 
 
 if __name__ == "__main__":
