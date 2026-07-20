@@ -377,5 +377,152 @@ def main():
     print(f"\ndone in {meta['minutes']} min -> results/p3_*.csv")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and os.environ.get("P3_ARM") != "phi":
     main()
+
+
+# =====================================================================================
+# PI-MAML-phi : THE PHYSICS IS THE ARCHITECTURE (not a penalty on a free network)
+# -------------------------------------------------------------------------------------
+# The free-network variant above fails because a flexible learner cannot extrapolate from
+# three points -- the same failure mode Paper 1 documented for capacity in this regime.
+# Here the base learner IS the wear law of Paper 1: VB(t) = b + a*t^p with a>0 (softplus)
+# and 0<p<1 (sigmoid), so every adapted forecast is admissible by construction. What is
+# meta-learned is the INITIALISATION (b0, a0, p) and the PER-PARAMETER adaptation rates
+# (Meta-SGD). The inner loop adapts (b, a) on the support set.
+#
+# CRITICAL CONTROL: `closed_form` fits the same law to the same m points directly
+# (least squares at the fleet exponent) with NO meta-learning. If PI-MAML-phi merely
+# converges to it, meta-learning contributes nothing and we must say so.
+# =====================================================================================
+def _law(b, la, lp, t):
+    return b + torch.nn.functional.softplus(la) * t.pow(torch.sigmoid(lp))
+
+
+def _inner_phi(th, so, sv, K, create_graph=True):
+    b, la, lp = th[0], th[1], th[2]
+    ab, aa = torch.exp(th[3]), torch.exp(th[4])
+    for _ in range(K):
+        loss = ((_law(b, la, lp, so) - sv) ** 2).mean()
+        gb, ga = torch.autograd.grad(loss, [b, la], create_graph=create_graph)
+        b = b - ab * gb
+        la = la - aa * ga
+    return b, la, lp
+
+
+def meta_train_phi(tasks, K, iters=250, seed=SEED, lr=0.05):
+    torch.manual_seed(seed)
+    rng = np.random.default_rng(seed)
+    th = [torch.tensor(x, requires_grad=True, dtype=torch.float32) for x in
+          (100.0, np.log(20.0), 0.0, np.log(0.05), np.log(0.05))]
+    opt = torch.optim.Adam(th, lr=lr)
+    for _ in range(iters):
+        opt.zero_grad()
+        tot = 0.0
+        idx = rng.choice(len(tasks), size=min(16, len(tasks)), replace=False)
+        for j in idx:
+            t = tasks[int(j)]
+            so = torch.tensor(t["so"], dtype=torch.float32)
+            sv = torch.tensor(t["sv"], dtype=torch.float32)
+            qo = torch.tensor(t["qo"], dtype=torch.float32)
+            qv = torch.tensor(t["qv"], dtype=torch.float32)
+            b, la, lp = _inner_phi(th, so, sv, K)
+            tot = tot + ((_law(b, la, lp, qo) - qv) ** 2).mean()
+        (tot / len(idx)).backward()
+        torch.nn.utils.clip_grad_norm_(th, 10.0)
+        opt.step()
+    return [x.detach() for x in th]
+
+
+def closed_form(so, sv, p):
+    """CONTROL: least-squares fit of the same law to the same support, no meta-learning."""
+    A = np.column_stack([np.ones(len(so)), so ** p])
+    c, *_ = np.linalg.lstsq(A, sv, rcond=None)
+    return lambda t: c[0] + c[1] * t ** p
+
+
+def eval_phi(d, th, test_tools, m, K, p_fleet, use_closed_form=False):
+    per = []
+    for t in test_tools:
+        o, v = traj(d, t)
+        if len(o) <= m:
+            continue
+        if use_closed_form:
+            f = closed_form(o[:m], v[:m], p_fleet)
+            yh = f(o[m:])
+        else:
+            thc = [x.clone().requires_grad_(True) for x in th]
+            b, la, lp = _inner_phi(thc, torch.tensor(o[:m], dtype=torch.float32),
+                                   torch.tensor(v[:m], dtype=torch.float32), K,
+                                   create_graph=False)
+            with torch.no_grad():
+                yh = _law(b, la, lp, torch.tensor(o[m:], dtype=torch.float32)).numpy()
+        per.append(float(np.mean(np.abs(yh - v[m:]))))
+    return per
+
+
+def run_phi(d, folds, name, m_list=(3, 4), K_list=(3, 10, 30), lam=0.5, n_phys=400,
+            iters=250, tag="PI-MAML-phi"):
+    rows = []
+    for m in m_list:
+        acc = {k: [] for k in K_list}
+        acc_cf = []
+        for fname, test_tools in folds:
+            train_tools = [t for t in tools_of(d) if t not in test_tools]
+            p = fit_fleet_p(d, train_tools)
+            bs, as_, sd = fleet_posterior(d, train_tools, p)
+            rng = np.random.default_rng(SEED)
+            T = []
+            if lam > 0:
+                T += real_tasks(d, train_tools, m_list=(m,))
+            if lam < 1:
+                T += physics_tasks(rng, bs, as_, sd, p, int(n_phys * (1 - lam)), m_list=(m,))
+            if not T:
+                continue
+            acc_cf += eval_phi(d, None, test_tools, m, 0, p, use_closed_form=True)
+            for K in K_list:
+                th = meta_train_phi(T, K, iters=iters)
+                acc[K] += eval_phi(d, th, test_tools, m, K, p)
+        for K in K_list:
+            if not acc[K]:
+                continue
+            rows.append(dict(protocol=name, tag=tag, m=m, K=K,
+                             MAE=round(float(np.mean(acc[K])), 2),
+                             MAE_median=round(float(np.median(acc[K])), 2),
+                             n_tools=len(acc[K]), record=REC.get(m),
+                             beats_record=bool(np.mean(acc[K]) < REC.get(m, np.inf))))
+            print(f"  [{name} · {tag}] m={m} K={K} -> MAE {np.mean(acc[K]):6.2f} um "
+                  f"(record {REC.get(m)}) "
+                  f"{'BEATS' if np.mean(acc[K]) < REC.get(m, np.inf) else 'below record'}",
+                  flush=True)
+        if acc_cf:
+            rows.append(dict(protocol=name, tag="closed-form control (no meta-learning)",
+                             m=m, K=0, MAE=round(float(np.mean(acc_cf)), 2),
+                             MAE_median=round(float(np.median(acc_cf)), 2),
+                             n_tools=len(acc_cf), record=REC.get(m),
+                             beats_record=bool(np.mean(acc_cf) < REC.get(m, np.inf))))
+            print(f"  [{name} · CONTROL closed-form] m={m} -> MAE {np.mean(acc_cf):6.2f} um",
+                  flush=True)
+    return rows
+
+
+def main_phi():
+    """Physics-structured arm + the closed-form control, on both protocols."""
+    d = load()
+    tools = tools_of(d)
+    print("=== PHI · physics-structured PI-MAML + closed-form control ===", flush=True)
+    rows = run_phi(d, [(t, [t]) for t in tools], "LOOCV")
+    print("=== PHI · LOLO cross-condition ===", flush=True)
+    for factor, col in [("vc", "vc"), ("feed", "fz"), ("cooling", "cool")]:
+        folds = [(f"{factor}={lev}",
+                  sorted(d[d[col] == lev].tool_id.unique(),
+                         key=lambda x: int(str(x).lstrip("T") or 0)))
+                 for lev in sorted(d[col].unique())]
+        r = run_phi(d, folds, "LOLO", K_list=(10,), tag=f"PI-MAML-phi · {factor}")
+        rows += r
+    pd.DataFrame(rows).to_csv(os.path.join(RES, "p3_phi.csv"), index=False)
+    print("wrote results/p3_phi.csv", flush=True)
+
+
+if __name__ == "__main__" and os.environ.get("P3_ARM") == "phi":
+    main_phi()

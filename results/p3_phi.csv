@@ -1,0 +1,21 @@
+protocol,tag,m,K,MAE,MAE_median,n_tools,record,beats_record
+LOOCV,PI-MAML-phi,3,3,21.71,12.35,18,11.02,False
+LOOCV,PI-MAML-phi,3,10,17.41,11.56,18,11.02,False
+LOOCV,PI-MAML-phi,3,30,19.24,16.08,18,11.02,False
+LOOCV,closed-form control (no meta-learning),3,0,12.25,8.25,18,11.02,False
+LOOCV,PI-MAML-phi,4,3,21.48,13.75,18,5.63,False
+LOOCV,PI-MAML-phi,4,10,21.81,16.02,18,5.63,False
+LOOCV,PI-MAML-phi,4,30,21.6,16.89,18,5.63,False
+LOOCV,closed-form control (no meta-learning),4,0,10.41,8.17,18,5.63,False
+LOLO,PI-MAML-phi · vc,3,10,18.49,18.63,18,11.02,False
+LOLO,closed-form control (no meta-learning),3,0,16.48,9.79,18,11.02,False
+LOLO,PI-MAML-phi · vc,4,10,17.96,16.99,18,5.63,False
+LOLO,closed-form control (no meta-learning),4,0,11.9,7.76,18,5.63,False
+LOLO,PI-MAML-phi · feed,3,10,25.28,19.33,18,11.02,False
+LOLO,closed-form control (no meta-learning),3,0,12.37,8.11,18,11.02,False
+LOLO,PI-MAML-phi · feed,4,10,24.99,18.87,18,5.63,False
+LOLO,closed-form control (no meta-learning),4,0,9.82,6.92,18,5.63,False
+LOLO,PI-MAML-phi · cooling,3,10,14.64,10.72,18,11.02,False
+LOLO,closed-form control (no meta-learning),3,0,16.21,8.48,18,11.02,False
+LOLO,PI-MAML-phi · cooling,4,10,16.5,9.81,18,5.63,False
+LOLO,closed-form control (no meta-learning),4,0,12.59,7.76,18,5.63,False
