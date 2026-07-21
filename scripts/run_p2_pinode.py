@@ -162,7 +162,7 @@ def pack_fold(train_tools, d, p_star):
 
 
 def train_field(train_tools, d, p_star, beta, lam_phys, lam_mono, lam_gate,
-                epochs=140, lr=1.2e-2, seed=0):
+                epochs=80, lr=1.6e-2, seed=0):
     """Fit the shared field on the training fleet (eqs. 6-9), batched over tools."""
     torch.manual_seed(seed)
     pk = pack_fold(train_tools, d, p_star)
@@ -201,28 +201,53 @@ def _single(o, v, z):
             torch.as_tensor(z).reshape(1, -1), torch.ones(1, len(o)))
 
 
-def personalise(field, o, v, z, m, p_star):
-    """Per-tool rate scale a_k from the m anchors only."""
+def personalise(field, o, v, z, m, p_star, gamma=3.0):
+    """Per-tool personalisation from the m anchors ONLY.
+
+    Inherits the two levers the foundational study identified as decisive, so that the
+    continuous model is granted exactly what the incumbent is granted:
+      * EXTRAPOLATION WEIGHTS w_i ∝ tau_i^gamma (gamma = 3) — the anchors nearest the forecast
+        horizon dominate the fit, i.e. the fit answers the extrapolation question;
+      * a personalised LEVEL as well as a rate: the initial condition is allowed a small robust
+        offset instead of being pinned to a single (possibly noisy) first reading.
+    Returns (a_k, vb0).
+    """
     tau = o[:m] ** p_star
-    a0, _ = theil_sen(tau, v[:m])
+    a0, b0 = theil_sen(tau, v[:m])
     seed = max(float(a0) * p_star * max(o[0], 1.0) ** (p_star - 1), 1e-3)
+    w = torch.as_tensor((tau / max(tau.max(), 1e-9)) ** gamma)      # eq.-(P1) weights
+    w = w / w.sum()
+
     T, V, Z, M = _single(o[:m], v[:m], z[:m])
-    best, best_a = np.inf, seed
+    lvl0 = float(b0 + a0 * tau[0])                                   # robust level at the origin
+    best, best_pair = np.inf, (seed, float(v[0]))
     with torch.no_grad():
-        for mult in np.linspace(0.2, 3.2, 25):
+        for mult in np.linspace(0.15, 3.5, 34):
             a = torch.as_tensor([seed * mult])
-            pred = rk4_batch(field, V[:, 0], a, T, Z, M)
-            err = float(torch.mean((pred - V) ** 2))
-            if err < best:
-                best, best_a = err, seed * mult
-    return best_a
+            for lam in np.linspace(0.0, 1.0, 5):                     # blend measured vs robust level
+                vb0 = torch.as_tensor([(1 - lam) * float(v[0]) + lam * lvl0])
+                pred = rk4_batch(field, vb0, a, T, Z, M)
+                err = float((w * (pred.reshape(-1) - V.reshape(-1)) ** 2).sum())
+                if err < best:
+                    best, best_pair = err, (seed * mult, float(vb0))
+    return best_pair
 
 
-def forecast(field, o, v, z, m, a_k):
-    T, V, Z, M = _single(o, v, z)
+def forecast(field, o, v, z, m, params):
+    """Roll the dynamics FORWARD FROM THE LAST ANCHOR.
+
+    Deployment semantics: at cycle t_m the tool's wear is known (VB_m); the question is what
+    happens next. Integrating from the first reading instead would accumulate field error across
+    the anchor window for no reason — and would deny the continuous model the same conditioning
+    on the most recent observation that the incumbent enjoys.
+    """
+    a_k, _vb0 = params
+    T, V, Z, M = _single(o[m - 1:], v[m - 1:], z[m - 1:])
     with torch.no_grad():
-        pred = rk4_batch(field, V[:, 0], torch.as_tensor([a_k]), T, Z, M)
-    return pred.reshape(-1).numpy()
+        pred = rk4_batch(field, torch.as_tensor([float(v[m - 1])]),
+                         torch.as_tensor([a_k]), T, Z, M)
+    tail = pred.reshape(-1).numpy()
+    return np.concatenate([np.asarray(v[:m - 1], float), tail])
 
 
 # ------------------------------------------------------------------------ baselines
@@ -291,17 +316,51 @@ def bin_of(delta, edges=(1.5, 3.5)):
     return 0 if delta <= edges[0] else (1 if delta <= edges[1] else 2)
 
 
+def pretrain(budget_n):
+    """Train (at most) N missing fields, checkpoint each, then exit — resumable."""
+    d = load_all(); tools = tools_of(d)
+    variants = [("pinode", BETA_MAX, 1.0), ("pinode_nogate", 0.0, 1.0), ("ode_nophys", 0.0, 0.0)]
+    todo = [(t, k, b, lp) for t in tools for k, b, lp in variants
+            if not os.path.exists(os.path.join(CKPT, f"{t}_{k}_s0.pt"))]
+    print(f"missing fields: {len(todo)} of {len(tools)*len(variants)} — training up to {budget_n}",
+          flush=True)
+    for i, (t, k, b, lp) in enumerate(todo[:budget_n], 1):
+        p_star = fit_p(d[d.tool_id != t])
+        get_field(t, d, tools, p_star, k, b, lp, 0.1, 0.05, 0)
+        print(f"  [{i}/{min(budget_n,len(todo))}] {t} {k} checkpointed", flush=True)
+    left = len(todo) - min(budget_n, len(todo))
+    print(f"done. remaining: {left}", flush=True)
+
+
 # ----------------------------------------------------------------------------- runner
 _FIELD_CACHE = {}
+CKPT = os.path.join(ROOT, "results", "p2_fields")
+os.makedirs(CKPT, exist_ok=True)
 
 
 def get_field(tool_out, d, tools, p_star, key, beta, lam_phys, lam_mono, lam_gate, seed=0):
-    """A field depends only on the FOLD and the hyper-parameters — never on m or the regime."""
+    """A field depends only on the FOLD and the hyper-parameters — never on m or the regime.
+
+    Checkpointed to disk so a long run can be resumed after an interruption."""
     ck = (tool_out, key, seed)
-    if ck not in _FIELD_CACHE:
-        _FIELD_CACHE[ck] = train_field([x for x in tools if x != tool_out], d, p_star,
-                                       beta, lam_phys, lam_mono, lam_gate, seed=seed)
-    return _FIELD_CACHE[ck]
+    if ck in _FIELD_CACHE:
+        return _FIELD_CACHE[ck]
+    path = os.path.join(CKPT, f"{tool_out}_{key}_s{seed}.pt")
+    if os.path.exists(path):
+        fld = WearField(beta=beta)
+        fld.load_state_dict(torch.load(path, weights_only=True))
+        fld.eval()
+        _FIELD_CACHE[ck] = fld
+        return fld
+    fld = train_field([x for x in tools if x != tool_out], d, p_star,
+                      beta, lam_phys, lam_mono, lam_gate, seed=seed)
+    if fld is not None:
+        torch.save(fld.state_dict(), path)
+    _FIELD_CACHE[ck] = fld
+    return fld
+
+
+_GRU_CACHE = {}
 
 
 def run(regimes=("R0", "R1", "R2"), budgets=(2, 3, 4),
@@ -339,13 +398,15 @@ def run(regimes=("R0", "R1", "R2"), budgets=(2, 3, 4),
                     fld = get_field(t, d, tools, p_star, key, beta, lp, lam_mono, lam_gate, seed)
                     if fld is None:
                         continue
-                    a_k = personalise(fld, o, v, z, m, p_star)
-                    err = np.abs(forecast(fld, o, v, z, m, a_k)[m:] - v[m:])
+                    par = personalise(fld, o, v, z, m, p_star)
+                    err = np.abs(forecast(fld, o, v, z, m, par)[m:] - v[m:])
                     acc[key].append(float(np.mean(err)))
                     if key == "pinode":
                         conf["resid"].extend(err.tolist())
                         conf["delta"].extend((o[m:] - o[m - 1]).tolist())
-                net, head = baseline_gru([x for x in tools if x != t], d, m, seed=seed)
+                if t not in _GRU_CACHE:
+                    _GRU_CACHE[t] = baseline_gru([x for x in tools if x != t], d, m, seed=seed)
+                net, head = _GRU_CACHE[t]
                 acc["gru"].append(float(np.mean(np.abs(gru_forecast(net, head, o, v, m)[m:] - v[m:]))))
 
             q = mondrian_bands(conf["resid"], conf["delta"]) if conf["resid"] else {}
@@ -377,6 +438,8 @@ def run(regimes=("R0", "R1", "R2"), budgets=(2, 3, 4),
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true", help="R0 only, m=3,4")
+    ap.add_argument("--pretrain-only", type=int, default=0,
+                    help="train at most N missing fields, checkpoint them, then exit")
     a = ap.parse_args()
     print("PAPER 2 · PI-Neural ODE — leakage-safe LOOCV (18 tools)\n" + "=" * 62)
     run(regimes=("R0",) if a.quick else ("R0", "R1", "R2"),

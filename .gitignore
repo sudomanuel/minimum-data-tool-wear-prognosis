@@ -10,3 +10,6 @@ outputs/logs/
 
 # Local-only outputs of legacy report-writing scripts (content not published)
 reports/
+
+# Paper-2 field checkpoints (regenerable: run_p2_config_search.py --pretrain-only N)
+results/p2_fields/
