@@ -1,0 +1,10 @@
+tag,m,MAE,pooled_R2,record,beats_record,note
+Siegel repeated-median (record replication),3,11.02,0.495,11.02,True,target 11.02
+WRM gamma(h)=1 (weight-free control),3,14.63,0.512,11.02,False,weighted Siegel
+WRM gamma(h)=3,3,11.57,-0.604,11.02,False,weighted Siegel
+WRM gamma(h)=6/h,3,11.57,-0.604,11.02,False,weighted Siegel
+WRM gamma(h)=8/h,3,11.57,-0.604,11.02,False,weighted Siegel
+WRM gamma(h)=6/sqrt(h),3,11.57,-0.604,11.02,False,weighted Siegel
+"WRM gamma(h)=max(3,8-h)",3,11.57,-0.604,11.02,False,weighted Siegel
+WLS gamma(h)=6/sqrt(h),3,11.64,0.475,11.02,False,different estimator family
+WLS gamma(h)=8/h,3,11.68,0.526,11.02,False,different estimator family

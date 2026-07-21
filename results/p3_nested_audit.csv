@@ -1,0 +1,3 @@
+m,best_scheme,in_search_MAE,nested_MAE,optimism,nested_winner_share,coverage_pct,mean_width_um,record,beats_record_nested,coverage_valid,ADOPTED
+3,gamma(h)=6/sqrt(h),11.64,12.13,0.5,0.78,89.8,81.2,11.02,False,True,False
+4,gamma(h)=8/h,3.63,3.57,-0.06,0.94,89.0,49.0,5.63,True,True,True
