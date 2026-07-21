@@ -137,6 +137,39 @@ T = {
 }
 
 
+
+
+# ---- IMRaD-pure overrides: the Methods figure states the workflow, never its outcomes ----
+PAPER_OVERRIDE = {
+ "EN": dict(
+   sout="CROSS-TOOL VB READING\n(concurrent-reading task)\noutcome established in Section 4",
+   p1="FLEET WEAR SHAPE\ngrid p ∈ [0.20, 1.00] · pooled SSE\nover the 17 training tools (eq. 4)",
+   k1="CONFORMAL LAYER (eq. 6–7)\nout-of-fold residuals → Mondrian\nhorizon bins ≤1 · 2–3 · ≥4",
+   k2="CHIPPING HAZARD (eq. 9)\nlogit h(VB) on the fleet's cycles\nand 18 terminal events → VB_safe",
+   d3="ONLINE MONITOR (eq. 10)\nKalman in the τ-clock,\nevent-triggered updates",
+   d1="HEALTH INDEX + RUL WINDOW\n(eq. 8) threshold ladder\n{120,150,175,200} µm",
+   d2="SAFE-STOP DECISION\nstop when the UPPER band edge\ncrosses VB_safe",
+   lane_s="DATA-DRIVEN SENSOR BRANCH",
+   lane_p="PHYSICS-INTEGRATED FEW-SHOT BRANCH",
+   e_null="cross-tool VB reading",
+   e_kurt="per-cycle transient indicators\nscreened as risk covariates (Sec. 3.6)",
+ ),
+ "ES": dict(
+   sout="LECTURA DE VB ENTRE ÚTILES\n(tarea de lectura concurrente)\ndesenlace en la Sección 4",
+   p1="FORMA DE DESGASTE DE FLOTA\ngrilla p ∈ [0.20, 1.00] · SSE agrupado\nsobre los 17 útiles de entrenamiento (ec. 4)",
+   k1="CAPA CONFORME (ec. 6–7)\nresiduos fuera-de-pliegue → Mondrian\nceldas de horizonte ≤1 · 2–3 · ≥4",
+   k2="HAZARD DE ASTILLADO (ec. 9)\nlogit h(VB) sobre los ciclos de la flota\ny 18 eventos terminales → VB_safe",
+   d3="MONITOR EN LÍNEA (ec. 10)\nKalman en el reloj τ,\nactualizaciones por eventos",
+   d1="ÍNDICE DE SALUD + VENTANA RUL\n(ec. 8) escalera de umbrales\n{120,150,175,200} µm",
+   d2="DECISIÓN DE PARADA SEGURA\nparar cuando el borde SUPERIOR\ncruza VB_safe",
+   lane_s="RAMA DE SENSORES BASADA EN DATOS",
+   lane_p="RAMA FÍSICA DE POCAS MUESTRAS",
+   e_null="lectura de VB entre útiles",
+   e_kurt="indicadores transitorios por ciclo\ncribados como covariables (Sec. 3.6)",
+ ),
+}
+
+
 # ============================ orthogonal router ============================
 class Router:
     """Manhattan connectors with schematic hops at crossings and junction dots."""
@@ -242,11 +275,18 @@ class Router:
         return n_hops
 
 
-def make(lang):
-    L = T[lang]
-    fig, ax = plt.subplots(figsize=(24, 12.8))
+def make(lang, mode="deck"):
+    """mode='deck'  -> objective banner + KPI payoff ribbon (presentation)
+       mode='paper' -> IMRaD-pure: no banner, no KPI ribbon, no outcome numbers in boxes,
+                       so the Methods figure states the workflow only (supervisor rule)."""
+    L = dict(T[lang])
+    paper = mode == "paper"
+    if paper:
+        L.update(PAPER_OVERRIDE[lang])
+    top = 119.5 if paper else 128
+    fig, ax = plt.subplots(figsize=(24, 11.4 if paper else 12.8))
     fig.subplots_adjust(left=0.004, right=0.996, top=0.996, bottom=0.004)
-    ax.set_xlim(0, 240); ax.set_ylim(0, 128); ax.axis("off")
+    ax.set_xlim(0, 240); ax.set_ylim(14 if paper else 0, top); ax.axis("off")
 
     B = {}   # name -> (x, y, w, h)
 
@@ -398,23 +438,25 @@ def make(lang):
             markeredgecolor="white", markeredgewidth=0.8)
     ax.text(jx + 10.4, ly, L["legend_dot"], fontsize=7.2, va="center", color=SLATE, style="italic")
 
-    # ---------------- payoff ribbon ----------------
-    ax.add_patch(Rectangle((1.5, 1.5), 237, 12, fc="white", ec=NAVY, lw=1.4, zorder=3))
-    ax.text(4.5, 7.5, L["payoff_tag"], ha="left", va="center", fontsize=11, color=NAVY,
-            fontweight="bold", zorder=4)
-    x0 = 30
-    for big, small in L["kpis"]:
-        ax.text(x0, 9.6, big, ha="left", va="center", fontsize=14, color=EMER,
+    # ---------------- payoff ribbon (deck only) ----------------
+    if not paper:
+        ax.add_patch(Rectangle((1.5, 1.5), 237, 12, fc="white", ec=NAVY, lw=1.4, zorder=3))
+        ax.text(4.5, 7.5, L["payoff_tag"], ha="left", va="center", fontsize=11, color=NAVY,
                 fontweight="bold", zorder=4)
-        ax.text(x0, 4.3, small, ha="left", va="center", fontsize=6.8, color=SLATE, zorder=4,
-                linespacing=1.3)
-        x0 += 42
+        x0 = 30
+        for big, small in L["kpis"]:
+            ax.text(x0, 9.6, big, ha="left", va="center", fontsize=14, color=EMER,
+                    fontweight="bold", zorder=4)
+            ax.text(x0, 4.3, small, ha="left", va="center", fontsize=6.8, color=SLATE, zorder=4,
+                    linespacing=1.3)
+            x0 += 42
 
-    fig.savefig(os.path.join(FIG, f"dataflow_detailed_{lang}.png"), dpi=300, facecolor="white")
+    name = f"dataflow_paper_{lang}" if paper else f"dataflow_detailed_{lang}"
+    fig.savefig(os.path.join(FIG, name + ".png"), dpi=300, facecolor="white")
     plt.close(fig)
-    print(f"wrote dataflow_detailed_{lang}.png | clearance violations: {len(bad)} | hops: {n_hops}")
+    print(f"wrote {name}.png | clearance violations: {len(bad)} | hops: {n_hops}")
 
 
 if __name__ == "__main__":
-    make("EN")
-    make("ES")
+    make("EN"); make("ES")
+    make("EN", mode="paper"); make("ES", mode="paper")
